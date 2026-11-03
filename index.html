@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>桃園療養院職能治療科 AI 教案製作工作坊</title>
+<meta name="description" content="衛生福利部桃園療養院職能治療科 AI 教案製作工作坊講義（2026/11/3）：Typeless 語音輸入、Chrome 裡的 Gemini、帶入病人條件的教案提示語、ChatGPT／Gemini 生圖教案、Gemini 任務 vs 對話與 AI 生簡報、Canva 魔法圖層、用 AI 寫網頁遊戲／紙本生成器／教案資料庫與 HTML 簡報、Gemini 分享與 GitHub 上架、OpenCode 免費模型，以及 60 多個可直接使用的教案實例。">
+<meta property="og:title" content="桃園療養院職能治療科 AI 教案製作工作坊">
+<meta property="og:description" content="用 AI 做出病人做得到的教案：紙本、動畫、遊戲、藝術、資料庫。講義、提示語範本與 60 多個教案實例。">
+<meta property="og:image" content="https://mattsue1003.github.io/taoyuan-psychiatric-ot-ai/img/speaker.jpg">
+<style>
+:root{
+  --orange:#E8552D; --amber:#F4A93C; --teal:#028090; --ink:#12343B;
+  --teal-50:#E6F4F5; --orange-50:#FDEEE9; --amber-50:#FEF6E8;
+  --bg:#F7F9F9; --card:#FFFFFF; --line:#DCE6E7; --muted:#4F6B70;
+  --ok:#1E8E5A; --warn:#C0392B;
+  --radius:16px;
+  --font:"Microsoft JhengHei","PingFang TC","Noto Sans TC","Heiti TC",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:120px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:18px;line-height:1.75;overflow-x:hidden}
+img,svg{max-width:100%}
+a{color:var(--teal)}
+h1,h2,h3,h4{line-height:1.35;margin:0 0 .5em}
+h2{font-size:clamp(1.5rem,3.2vw,2rem)}
+h3{font-size:1.25rem}
+p{margin:.4em 0 .8em}
+kbd{display:inline-block;min-width:1.8em;padding:.05em .5em;border:1px solid #B9C9CB;border-bottom-width:3px;border-radius:7px;background:#fff;font-family:inherit;font-size:.92em;font-weight:700;text-align:center;line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+/* hero */
+.hero{background:linear-gradient(135deg,var(--ink) 0%,#0B4F58 55%,var(--teal) 100%);color:#fff;padding:56px 0 64px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(244,169,60,.45),rgba(244,169,60,0) 70%)}
+.hero .tag{display:inline-block;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);padding:4px 14px;border-radius:999px;font-size:.9rem;margin-bottom:14px}
+.hero h1{font-size:clamp(1.8rem,5vw,3rem);margin-bottom:.3em}
+.hero h1 span{color:var(--amber)}
+.hero .sub{font-size:clamp(1rem,2.2vw,1.2rem);opacity:.92;max-width:760px}
+.goals{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:28px;position:relative;z-index:1}
+.goal{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:16px 18px}
+.goal b{display:block;color:var(--amber);font-size:.95rem;margin-bottom:4px}
+.contact{display:flex;flex-wrap:wrap;gap:10px 12px;margin-top:24px;position:relative;z-index:1}
+.contact .btn{padding:12px 20px;font-size:1.05rem;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.btn.line{background:#06C755}
+.btn.mail{background:var(--orange)}
+.btn.fbc{background:#1877F2}
+.contact-hint{margin:12px 0 0;font-size:.95rem;opacity:.92;position:relative;z-index:1}
+.contact-hint b{color:var(--amber)}
+
+.lessons{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;position:relative;z-index:1}
+.lessons a{color:#fff;text-decoration:none;font-weight:800;padding:5px 16px;border-radius:999px;border:1.5px solid rgba(255,255,255,.45);font-size:.95rem}
+.lessons a:hover{background:rgba(255,255,255,.14)}
+.lessons a.on{background:var(--amber);border-color:var(--amber);color:var(--ink)}
+
+/* nav */
+nav.toc{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav.toc .wrap{display:flex;gap:8px;overflow-x:auto;padding-top:10px;padding-bottom:10px;scrollbar-width:none}
+nav.toc .wrap::-webkit-scrollbar{display:none}
+nav.toc a{flex:0 0 auto;text-decoration:none;color:var(--ink);background:var(--teal-50);padding:6px 14px;border-radius:999px;font-size:.95rem;font-weight:700;white-space:nowrap}
+nav.toc a.on{background:var(--teal);color:#fff}
+nav.toc .toc-g{flex:0 0 auto;align-self:center;font-size:.8rem;font-weight:800;color:#fff;background:var(--ink);padding:3px 9px;border-radius:6px;margin-left:6px;letter-spacing:.05em}
+nav.toc .toc-g:first-child{margin-left:0}
+nav.toc .toc-search{padding-top:0;padding-bottom:10px;overflow:visible;flex-wrap:wrap;align-items:center}
+nav.toc .toc-search input{flex:1 1 240px;min-width:0;padding:8px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:.95rem;font-family:inherit;background:#fff}
+nav.toc .toc-search input:focus{outline:2px solid var(--teal);border-color:var(--teal)}
+nav.toc #qCount{font-size:.9rem;color:var(--muted);min-width:4.5em;white-space:nowrap}
+.qbtn{background:var(--teal-50);border:0;border-radius:8px;padding:7px 11px;font-family:inherit;font-weight:700;color:var(--ink);cursor:pointer;font-size:.9rem}
+.qbtn:hover{background:var(--teal);color:#fff}
+mark.hit{background:#FFE08A;color:inherit;padding:0 2px;border-radius:3px}
+mark.hit.cur{background:var(--orange);color:#fff}
+
+/* sections */
+section{padding:56px 0 8px}
+.sec-head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.num{flex:0 0 auto;width:52px;height:52px;border-radius:14px;background:var(--orange);color:#fff;display:grid;place-items:center;font-size:1.4rem;font-weight:800}
+.sec-head p{margin:0;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;margin-bottom:18px;box-shadow:0 2px 0 rgba(18,52,59,.03)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.grid2>.card,.grid3>.card{margin-bottom:0}
+.pill{display:inline-block;font-size:.8rem;font-weight:700;padding:2px 10px;border-radius:999px;background:var(--teal-50);color:var(--teal);margin-right:6px;vertical-align:middle}
+.pill.o{background:var(--orange-50);color:var(--orange)}
+.pill.a{background:var(--amber-50);color:#A86A0B}
+.note{border-left:5px solid var(--amber);background:var(--amber-50);padding:14px 18px;border-radius:0 12px 12px 0;margin:14px 0}
+.note.red{border-color:var(--warn);background:#FDECEA}
+.note.teal{border-color:var(--teal);background:var(--teal-50)}
+ul,ol{padding-left:1.4em;margin:.4em 0 .8em}
+li{margin:.25em 0}
+
+/* tool cards */
+.tool{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+.tool>*,.grid2>*,.grid3>*{min-width:0}
+.tool-top{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.logo{width:60px;height:60px;border-radius:16px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:1.5rem;flex:0 0 auto}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--teal);color:#fff;text-decoration:none;font-weight:700;padding:10px 18px;border-radius:12px;border:0;cursor:pointer;font-family:inherit;font-size:1rem}
+.btn.o{background:var(--orange)}
+.btn.ghost{background:#fff;color:var(--teal);border:2px solid var(--teal)}
+.btn:hover{filter:brightness(1.07)}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+.steps li{counter-increment:s;position:relative;padding:10px 0 10px 50px;border-bottom:1px dashed var(--line)}
+.steps li:last-child{border-bottom:0}
+.steps li::before{content:counter(s);position:absolute;left:0;top:10px;width:34px;height:34px;border-radius:50%;background:var(--teal);color:#fff;display:grid;place-items:center;font-weight:800}
+.keys{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.key{background:var(--teal-50);border-radius:12px;padding:12px 14px}
+.key .k{font-size:1.15rem;margin-bottom:4px}
+
+/* checklist */
+.check label{display:flex;gap:12px;align-items:flex-start;padding:8px 0;cursor:pointer}
+.check input{width:22px;height:22px;margin-top:5px;accent-color:var(--teal);flex:0 0 auto}
+.check input:checked+span{color:var(--muted);text-decoration:line-through}
+.progress{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin:8px 0 4px}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--amber));transition:width .3s}
+
+/* tables */
+.tbl{overflow-x:auto;border-radius:12px;border:1px solid var(--line);background:#fff}
+table{border-collapse:collapse;width:100%;min-width:640px}
+th,td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{background:var(--ink);color:#fff;font-weight:700}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:700;white-space:nowrap}
+
+/* three no */
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+.no{background:#fff;border:2px solid var(--orange);border-radius:var(--radius);padding:22px;position:relative}
+.no .big{font-size:2.6rem;font-weight:900;color:var(--orange);line-height:1}
+.no h3{margin-top:8px}
+
+/* prompt boxes */
+.prompt{position:relative;background:#0F2C32;color:#E9F5F6;border-radius:14px;padding:18px 20px 18px;margin:12px 0;font-size:1rem;line-height:1.75;white-space:pre-wrap;word-break:break-word}
+.prompt .copy{position:absolute;top:10px;right:10px;background:var(--amber);color:var(--ink);border:0;border-radius:9px;padding:5px 12px;font-weight:800;cursor:pointer;font-family:inherit;font-size:.9rem}
+.prompt .label{display:block;color:var(--amber);font-weight:800;margin-bottom:6px;padding-right:80px}
+
+/* six elements */
+.six{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:18px}
+.el{background:#fff;border:1px solid var(--line);border-top:6px solid var(--teal);border-radius:14px;padding:14px 16px}
+.el:nth-child(2){border-top-color:var(--orange)}.el:nth-child(3){border-top-color:var(--amber)}
+.el:nth-child(4){border-top-color:var(--ink)}.el:nth-child(5){border-top-color:#5B8E7D}.el:nth-child(6){border-top-color:var(--warn)}
+.el b{font-size:1.25rem;display:block}
+.el small{color:var(--muted);font-size:.92rem;display:block;line-height:1.5}
+
+/* forms */
+.field{margin-bottom:12px}
+.field label{display:block;font-weight:800;margin-bottom:4px}
+.field label em{font-style:normal;font-weight:400;color:var(--muted);font-size:.9rem}
+textarea,select,input[type=text]{width:100%;font-family:inherit;font-size:1rem;padding:10px 12px;border:1px solid #B9C9CB;border-radius:10px;background:#fff;color:var(--ink);line-height:1.6}
+textarea{resize:vertical}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+
+/* de-id */
+.deid-out{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-height:90px;white-space:pre-wrap;word-break:break-word}
+mark{background:#FFD9CC;color:var(--ink);border-radius:5px;padding:0 3px;font-weight:700}
+mark[data-t]::after{content:attr(data-t);font-size:.7em;background:var(--orange);color:#fff;border-radius:4px;padding:0 4px;margin-left:3px;vertical-align:super}
+.found{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.found span{background:var(--orange-50);color:var(--orange);border-radius:999px;padding:2px 12px;font-weight:700;font-size:.92rem}
+
+/* compare */
+.ba{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.ba .card h3{display:flex;align-items:center;gap:8px}
+.elder{font-size:1.45rem;line-height:1.8}
+.elder p{margin:.2em 0 .6em}
+.elder .em{color:var(--orange);font-weight:900}
+.tr-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.tr-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px}
+.tr-box b{display:block;color:var(--teal);margin-bottom:4px}
+.diff{background:#FDECEA;border-radius:5px;padding:0 3px;font-weight:700;color:var(--warn)}
+
+/* flow */
+.flow{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin:14px 0}
+.flow div{flex:1 1 150px;background:var(--teal);color:#fff;border-radius:12px;padding:12px 14px;font-weight:700;position:relative}
+.flow div small{display:block;font-weight:400;opacity:.9;line-height:1.5}
+.flow div:nth-child(2){background:#0B6C78}.flow div:nth-child(3){background:var(--ink)}.flow div:nth-child(4){background:var(--orange)}
+
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 16px}
+.tab{font-family:inherit;font-size:1rem;font-weight:800;padding:8px 16px;border-radius:999px;border:2px solid var(--teal);background:#fff;color:var(--teal);cursor:pointer}
+.tab.on{background:var(--teal);color:#fff}
+.panel{display:none}.panel.on{display:block}
+@media print{.panel{display:block!important}.tabs{display:none}}
+details.risk{border-left:6px solid var(--orange);padding:14px 20px}
+details.risk summary{font-size:1.1rem}
+.risk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:6px}
+.r-bad,.r-good{border-radius:12px;padding:14px 16px}
+.r-bad{background:#FDECEA}.r-good{background:var(--teal-50)}
+.r-bad>b,.r-good>b{display:block;margin-bottom:4px}
+.r-bad>b{color:var(--warn)}.r-good>b{color:var(--teal)}
+.r-bad ul,.r-good ul{margin:0}
+.shortcut-box{background:#fff;border:2px solid var(--teal);border-radius:var(--radius);padding:18px 20px;margin:18px 0}
+.shortcut-box h3{color:var(--teal)}
+.shortcut-box td small{color:var(--muted);font-weight:400}
+.shortcut-box td:nth-child(2),.shortcut-box td:nth-child(3){white-space:nowrap}
+.btn3 .b3{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.b3-ico{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:1.3rem;margin-bottom:8px;color:#fff}
+.b3 h4{margin:0 0 6px;font-size:1.1rem}
+.b3 ul{margin:0;padding-left:1.2em}
+.card.alt{border:2px solid var(--amber);background:#FFFDF8}
+.sm-link{font-size:.85rem;padding:5px 12px;border-radius:9px;vertical-align:middle}
+.deid-cta{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;justify-content:space-between;background:var(--teal-50);border:1px solid #BFE0E3;border-radius:12px;padding:14px 16px}
+.deid-cta>div:first-child{flex:1 1 320px;min-width:0}
+.card.fb{background:linear-gradient(120deg,var(--ink),#0B4F58);color:#fff;border:0}
+.fb-in{display:flex;flex-wrap:wrap;gap:16px 22px;align-items:center}
+.fb-ico{width:56px;height:56px;border-radius:14px;background:#1877F2;color:#fff;font-weight:900;font-size:2rem;display:grid;place-items:center;flex:0 0 auto}
+.example{background:var(--amber-50);border:1px dashed var(--amber);border-radius:12px;padding:12px 16px;margin:10px 0}
+details{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 18px;margin:10px 0}
+details summary{cursor:pointer;font-weight:800}
+details[open] summary{margin-bottom:8px}
+
+footer{margin-top:60px;background:var(--ink);color:#CFE3E5;padding:36px 0;font-size:.95rem}
+footer a{color:var(--amber)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;padding:10px 20px;border-radius:999px;font-weight:700;transition:transform .25s;z-index:99}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media (max-width:640px){
+  body{font-size:17px}
+  .wrap{padding:0 16px}
+  .card{padding:18px}
+  .hero{padding:40px 0 44px}
+  .num{width:44px;height:44px;font-size:1.2rem}
+  .elder{font-size:1.3rem}
+  .prompt{font-size:.95rem}
+}
+@media print{
+  nav.toc,.copy,.row .btn,.toast{display:none!important}
+  .hero{background:var(--ink)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  section{break-inside:avoid-page}
+}
+
+/* ---- shared additions ---- */
+.lessons{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;position:relative;z-index:1}
+.lessons a{color:#fff;text-decoration:none;font-weight:800;padding:5px 16px;border-radius:999px;border:1.5px solid rgba(255,255,255,.45);font-size:.95rem}
+.lessons a:hover{background:rgba(255,255,255,.14)}
+.lessons a.on{background:var(--amber);border-color:var(--amber);color:var(--ink)}
+.t{display:inline-block;font-size:.8rem;font-weight:800;padding:2px 10px;border-radius:999px;color:#fff;margin-right:6px;vertical-align:middle;white-space:nowrap;line-height:1.6}
+.t.gpt{background:#0E8A6B}.t.cl{background:#B4532F}.t.ge{background:#2F62D0}
+th .t{font-size:.9rem}
+.tri{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-bottom:18px}
+.tri>.card,.grid3>.card{margin-bottom:0;min-width:0}
+.gpt-c{border-top:5px solid #0E8A6B}.cl-c{border-top:5px solid #B4532F}.ge-c{border-top:5px solid #2F62D0}
+.tri ul,.tri ol{margin-bottom:0}
+.tri .steps li{padding:8px 0 8px 42px}.tri .steps li::before{width:30px;height:30px;top:8px}
+.b3{background:var(--teal-50);border-radius:14px;padding:14px 16px}
+.b3 h4{margin:0 0 6px;font-size:1.1rem}
+.flow div:nth-child(4){background:var(--orange)}
+ .video{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vgrid{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:18px;margin-bottom:18px}
+.vgrid>.card{margin-bottom:0;min-width:0}
+@media (max-width:900px){.vgrid{grid-template-columns:minmax(0,1fr)}}
+.t.oc{background:#374151}
+th .t.oc{box-shadow:0 0 0 1.5px rgba(255,255,255,.55)}
+.oc-c{border-top:5px solid #1F2937}
+.pill{white-space:nowrap}
+/* operation mockups */
+.mockgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin:16px 0}
+figure.mock{margin:0;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+.mock .bar{display:flex;align-items:center;gap:6px;padding:8px 12px;background:#EEF2F3;border-bottom:1px solid var(--line);font-size:.8rem;color:var(--muted);font-weight:700}
+.mock .bar i{width:9px;height:9px;border-radius:50%;background:#C9D3D5;display:inline-block}
+.mock .bar span{margin-left:6px}
+.mock .scr{padding:14px;background:#FBFBFA;font-size:.88rem;line-height:1.6;display:flex;flex-direction:column;gap:10px;position:relative}
+.mock .u{align-self:flex-end;max-width:88%;background:#ECEAE4;border-radius:14px 14px 4px 14px;padding:8px 12px}
+.mock .a{max-width:96%}
+.mock .qcard{border:1px solid #E3DED6;background:#fff;border-radius:12px;padding:10px 12px;position:relative}
+.mock .qcard b{display:block;margin-bottom:6px}
+.mock .opt{display:flex;flex-wrap:wrap;gap:6px}
+.mock .opt span{border:1px solid #D9D3CA;border-radius:999px;padding:3px 10px;font-size:.82rem;background:#fff}
+.mock .opt span.sel{background:#B4532F;border-color:#B4532F;color:#fff}
+.mock .plan{border:1px solid #D5DEF3;background:#fff;border-radius:12px;padding:10px 12px;position:relative}
+.mock .plan ol{margin:6px 0 8px;padding-left:1.2em}
+.mock .btns{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.mock .btns span{border-radius:999px;padding:4px 12px;font-size:.82rem;font-weight:700;border:1px solid #2F62D0;color:#2F62D0;position:relative}
+.mock .btns span.go{background:#2F62D0;color:#fff}
+.mock .co{position:absolute;width:22px;height:22px;border-radius:50%;background:var(--orange);color:#fff;font-size:.75rem;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 3px #fff;z-index:2}
+.mock figcaption{padding:12px 14px;border-top:1px solid var(--line);font-size:.92rem}
+.mock figcaption ol{margin:4px 0 0;padding-left:0;list-style:none;counter-reset:c}
+.mock figcaption li{counter-increment:c;position:relative;padding-left:28px;margin:4px 0}
+.mock figcaption li::before{content:counter(c);position:absolute;left:0;top:3px;width:20px;height:20px;border-radius:50%;background:var(--orange);color:#fff;font-size:.72rem;font-weight:800;display:flex;align-items:center;justify-content:center}
+.mock .tag{font-size:.75rem;color:var(--muted);font-weight:400;margin-left:auto}
+.mock .coi{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--orange);color:#fff;font-size:.7rem;font-weight:800;margin-right:5px;vertical-align:-3px}
+/* real screenshots */
+.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin-top:10px}
+figure.shot{margin:0;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+figure.shot a{display:block;background:#111}
+figure.shot img{display:block;width:100%;height:auto}
+figure.shot figcaption{padding:10px 12px;font-size:.92rem;line-height:1.55}
+figure.shot figcaption b.n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--orange);color:#fff;font-size:.78rem;margin-right:6px}
+#gh code{overflow-wrap:anywhere;word-break:break-all}
+figure.shot img{max-height:440px;object-fit:contain;margin:0 auto}
+/* anchor targets land below the sticky nav + search bar */
+section,.card[id],div[id],h3[id]{scroll-margin-top:118px}
+@media (max-width:720px){section,.card[id],div[id],h3[id]{scroll-margin-top:176px}}
+
+/* ---- 桃園療養院 OT additions ---- */
+.hero-grid{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:start;margin-top:18px}
+.hero .goals{margin-top:0}
+.qrbox{background:#fff;color:var(--ink);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;width:220px;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.qrbox img{width:180px;height:180px;display:block;border-radius:8px}
+.qrbox b{display:block;font-size:1.02rem}
+.qrbox small{display:block;color:var(--muted);font-size:.8rem;line-height:1.35;word-break:break-all}
+.qrbox span{display:block;font-size:.82rem;color:var(--muted);margin-top:2px}
+@media (max-width:860px){.hero-grid{grid-template-columns:1fr}.qrbox{width:100%;flex-direction:row;text-align:left;align-items:center}.qrbox img{width:132px;height:132px}}
+.me-card{display:grid;grid-template-columns:220px 1fr;gap:22px;align-items:start}
+.me-photo{width:220px;height:220px;object-fit:cover;border-radius:18px;border:4px solid var(--teal-50)}
+.me-sub{margin:0 0 8px;color:var(--teal);font-weight:700}
+.me-list{margin:0;padding-left:1.2em}
+.me-list li{margin:.15em 0}
+.me-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.me-tags span{background:var(--teal-50);color:var(--teal);border-radius:999px;padding:.1em .7em;font-size:.88rem;font-weight:700}
+@media (max-width:720px){.me-card{grid-template-columns:1fr}.me-photo{width:160px;height:160px}}
+table.agenda td:first-child{white-space:nowrap;font-weight:700;color:var(--teal)}
+/* decision card */
+.decide{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.decide>div{border:2px solid var(--line);border-radius:14px;padding:14px 16px;background:#fff}
+.decide>div.pick{border-color:var(--teal);background:var(--teal-50)}
+.decide h4{margin:0 0 6px}
+.decide ul{margin:0;padding-left:1.2em}
+@media (max-width:720px){.decide{grid-template-columns:1fr}}
+/* library */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.chip{border:2px solid var(--line);background:#fff;border-radius:999px;padding:.3em 1em;font:inherit;font-weight:700;cursor:pointer;color:var(--ink)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.libgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.libcard{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:6px;transition:transform .15s,box-shadow .15s}
+.libcard:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(2,128,144,.12)}
+.libcard.hide{display:none}
+.libcard h4{margin:0;font-size:1.08rem;line-height:1.35}
+.libcard p{margin:0;font-size:.93rem;color:var(--muted);flex:1}
+.libcard .cats{display:flex;flex-wrap:wrap;gap:4px}
+.cat{font-size:.74rem;font-weight:700;border-radius:6px;padding:.08em .5em;color:#fff;background:var(--muted)}
+.cat.paper{background:#2E7D32}.cat.anim{background:#1565C0}.cat.game{background:#E8590C}.cat.art{background:#8E24AA}.cat.db{background:#00838F}
+.libcard a.go{align-self:flex-start;margin-top:4px;font-weight:700;text-decoration:none;color:var(--teal);border:2px solid var(--teal);border-radius:999px;padding:.15em .9em;font-size:.9rem}
+.libcard a.go:hover{background:var(--teal);color:#fff}
+.libcount{color:var(--muted);font-size:.92rem;margin:0 0 10px}
+/* hero contact */
+.hero .contact .btn.ghost{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.5)}
+.checks{display:grid;gap:8px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="tag">衛生福利部桃園療養院 職能治療科｜AI 教案製作 工作坊　11/3（二）13:30–16:30　8 樓職能治療活動室</span>
+    <h1>用 AI 做出病人「做得到」的教案：<br><span>紙本、動畫、遊戲、藝術、資料庫</span></h1>
+    <p class="sub">三個小時，從「用說的下指令」開始，把病人的條件帶進提示語，讓 AI 幫你生圖、做簡報、寫出可以直接在活動室打開的網頁遊戲與紙本生成器，最後上傳到 GitHub，一個網址就能在病房、日間病房與社區據點使用。</p>
+    <div class="hero-grid">
+      <div class="goals">
+        <div class="goal"><b>目標 1</b>會用 Typeless 語音、Gemini／ChatGPT／Claude 與 Chrome 裡的 Gemini，守住精神科病人資料的使用界線。</div>
+        <div class="goal"><b>目標 2</b>用六要素＋病人條件寫出教案提示語，讓 AI 生圖、做簡報、用 Canva 魔法圖層修圖。</div>
+        <div class="goal"><b>目標 3</b>請 AI 寫出網頁遊戲、紙本生成器、教案資料庫與 HTML 簡報，上傳 GitHub 或用 Gemini 一鍵分享。</div>
+      </div>
+      <div class="qrbox">
+        <img src="img/qr.png" alt="講義網址 QR code" width="180" height="180">
+        <div><b>掃描打開這份講義</b><small>mattsue1003.github.io/<br>taoyuan-psychiatric-ot-ai</small><span>手機、平板、電腦都能看，所有按鈕都可以點。</span></div>
+      </div>
+    </div>
+    <div class="contact">
+      <a class="btn fbc" href="https://www.facebook.com/profile.php?id=100063748491881" target="_blank" rel="noopener">愛迪樂 臉書粉專：看教案、領教案</a>
+      <a class="btn ghost" href="#lib">今天會看到的 65 個教案</a>
+      <button class="btn mail" type="button" onclick="window.openReport&&window.openReport({type:'建議與想法'})">回報錯誤或建議</button>
+    </div>
+    <p class="contact-hint">課程全程使用合成或去識別化的範例，不涉及真實病人資料；工具以免費版本能完成為原則，實際使用範圍依本院資訊安全與個資規範辦理。</p>
+  </div>
+</header>
+
+<nav class="toc" aria-label="章節導覽">
+  <div class="wrap">
+    <span class="toc-g">開場</span>
+    <a href="#ice">金曲猜歌</a>
+    <a href="#me">講師</a>
+    <a href="#agenda">今天流程</a>
+    <span class="toc-g">工具就位</span>
+    <a href="#rules">界線與守則</a>
+    <a href="#ty">Typeless 語音</a>
+    <a href="#chrome">Chrome 快查</a>
+    <span class="toc-g">教案提示語</span>
+    <a href="#prompt">六要素</a>
+    <a href="#design">帶入病人條件</a>
+    <span class="toc-g">生圖與簡報</span>
+    <a href="#img">生圖教案</a>
+    <a href="#slides">AI 生簡報</a>
+    <a href="#canva">Canva 魔法圖層</a>
+    <span class="toc-g">寫程式</span>
+    <a href="#code">網頁與資料庫</a>
+    <a href="#html">HTML 簡報</a>
+    <a href="#share">Gemini 分享</a>
+    <a href="#gh">上傳 GitHub</a>
+    <a href="#oc">OpenCode</a>
+    <span class="toc-g">收尾</span>
+    <a href="#lib">教案實例庫</a>
+    <a href="#end">課後與粉專</a>
+  </div>
+  <div class="wrap toc-search">
+    <input id="q" type="search" placeholder="搜尋講義關鍵字：例如 魔法圖層、任務、GitHub、生圖、資料庫" aria-label="搜尋講義">
+    <span id="qCount"></span>
+    <button class="qbtn" id="qPrev" title="上一個">▲</button>
+    <button class="qbtn" id="qNext" title="下一個">▼</button>
+    <button class="qbtn" id="qClear">清除</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ice -->
+<section id="ice">
+  <div class="sec-head"><div class="num" style="background:#E8590C">♪</div><div><h2>開場破冰：台灣金曲猜歌</h2><p>先玩 10 分鐘。這不是題外話：這整個遊戲網頁就是用今天要教的 AI 工具「交辦」出來的，沒有寫過一行程式。三小時後，你也做得出自己的版本。</p></div></div>
+  <div class="card" style="border-left:5px solid #E8590C">
+    <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between">
+      <div style="flex:1 1 320px">
+        <h3 style="margin-top:0">台灣金曲猜歌</h3>
+        <p style="margin:0 0 8px">從 50 年代唱到 2026，15 組歌單共 300 首：國語年代金曲、台語金曲四個時期、鄧麗君與鳳飛飛特輯。選一組，播前奏，全場搶答。懷舊團體、病房團康、日間病房的開場都用得上。</p>
+        <p style="margin:0;color:var(--muted)">投影在大螢幕上效果最好；沒網路的活動室可用「本機音樂」改放自己的檔案。</p>
+      </div>
+      <a class="btn" href="https://mattsue1003.github.io/pop-song-guess/" target="_blank" rel="noopener" style="background:#E8590C;border-color:#E8590C">打開金曲猜歌</a>
+    </div>
+  </div>
+  <div class="grid3">
+    <div class="b3"><h4>今天怎麼玩（10 分鐘）</h4><ol class="steps" style="margin:0">
+      <li>講師投影，選一組歌單。同仁年齡層混合，先選「90 年代」或「經典精選」，再換一組台語。</li>
+      <li>按「播前奏」，預設只放前 15 秒，大家直接喊歌名。</li>
+      <li>沒人猜到就按「提示①」，一次一點。</li>
+      <li>「公布答案」後一起哼一段，再「下一題」。玩 5～6 題就夠熱了。</li>
+    </ol></div>
+    <div class="b3"><h4>帶病人團體時</h4><ul style="margin:0">
+      <li>慢性病房與日間病房的中高齡個案用「台語 1950–1970」或「鄧麗君特輯」，猜歌本身就是懷舊與現實導向的素材。</li>
+      <li>兩桌對抗、答對加分；分數不重要，<b>開口、抬頭、看彼此</b>才重要。</li>
+      <li>注意力短的個案把「提示」當成固定節奏：播 15 秒 → 提示 → 公布，不要拖。</li>
+    </ul></div>
+    <div class="b3"><h4>這跟今天的課有什麼關係</h4><p style="margin:0">版面、歌單、計分、提示流程，全部是用 AI 一句一句講出來的。今天最後兩節會教「寫程式」和「上傳 GitHub」，這種可以直接給病人玩的網頁教案，就是我們要帶走的成品。</p></div>
+  </div>
+  <div class="shots" style="margin-top:14px">
+    <figure class="shot"><a href="https://mattsue1003.github.io/q12345/img/l2-song-home.jpg" target="_blank" rel="noopener"><img src="https://mattsue1003.github.io/q12345/img/l2-song-home.jpg" alt="金曲猜歌首頁" loading="lazy"></a><figcaption><b class="n">1</b>首頁：國語年代、台語時期、歌手特輯三大類，點一組就開始。</figcaption></figure>
+    <figure class="shot"><a href="https://mattsue1003.github.io/q12345/img/l2-song-play.jpg" target="_blank" rel="noopener"><img src="https://mattsue1003.github.io/q12345/img/l2-song-play.jpg" alt="金曲猜歌遊戲畫面" loading="lazy"></a><figcaption><b class="n">2</b>遊戲畫面：播前奏、提示①②、公布答案、下一題，四顆按鈕帶完整場。</figcaption></figure>
+  </div>
+  <div class="note" style="margin-top:12px"><b>公播提醒：</b>遊戲內的音樂來自 YouTube 等公開來源，院內活動室團體使用屬教學範圍；若要錄影上傳或對外公開播放，請先確認授權。</div>
+</section>
+
+<!-- me -->
+<section id="me">
+  <div class="sec-head"><div class="num" style="background:#6C4AB6">師</div><div><h2>講師介紹</h2><p>為什麼是職能治療師來教 AI：因為這幾百個教案，都是在帶團體、看個案的空檔用 AI 做出來的。</p></div></div>
+  <div class="card me-card">
+    <img class="me-photo" src="img/speaker.jpg" alt="鍾孟修 職能治療師" width="220" height="220">
+    <div>
+      <h3 style="margin:0 0 4px">鍾孟修 職能治療師</h3>
+      <p class="me-sub">愛迪樂有限公司 執行長｜愛迪樂居家職能治療所 所長</p>
+      <ul class="me-list">
+        <li>社團法人台灣生活復能健康促進協會 副理事長、中華高齡專業照護訓練協會 理事</li>
+        <li>《讓你健康不失智》作者（商周出版，2025）；Homeseen 失智症桌遊 共同創辦人</li>
+        <li>社區大學講師；ICOPE 評估員、照顧者與長照專業人員培訓講師</li>
+        <li>2026 高照之心表揚大會「老師真會獎」講者：AI 輔助於照顧、復能與異常事件資料庫之應用</li>
+      </ul>
+      <div class="me-tags"><span>復能</span><span>健康促進</span><span>教學</span><span>AI 教案</span><span>失智症</span><span>中風復健</span><span>體智能</span><span>身障</span><span>長照</span></div>
+      <p style="margin:10px 0 0">過去一年半，用 AI 在 GitHub 上做了<b>數百個</b>公開的教案與工具網頁：紙本生成器、步驟動畫、團體遊戲、藝術活動、影片與教案資料庫。今天挑 65 個放在<a href="#lib">教案實例庫</a>，每一個都可以直接拿去帶團體，也都是今天教的方法做出來的。</p>
+      <div class="row" style="margin-top:10px">
+        <a class="btn fbc" href="https://www.facebook.com/profile.php?id=100063748491881" target="_blank" rel="noopener">愛迪樂 臉書粉專</a>
+        <a class="btn ghost" href="https://mattsue1003.github.io/ai-care-database-talk/" target="_blank" rel="noopener">看一場用 HTML 做的演講簡報</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- agenda -->
+<section id="agenda">
+  <div class="sec-head"><div class="num">0</div><div><h2>今天的流程（13:30–16:30）</h2><p>前半段把工具與提示語練熟，後半段做出東西、放上網。全程請開著自己的筆電或手機跟著做。</p></div></div>
+  <div class="tbl"><table class="agenda">
+    <thead><tr><th>時間</th><th>單元</th><th>你會做到</th></tr></thead>
+    <tbody>
+      <tr><td>13:30–13:45</td><td>破冰、講師介紹、今天帶走什麼</td><td>玩一輪金曲猜歌，掃 QR 打開講義</td></tr>
+      <tr><td>13:45–14:15</td><td><a href="#rules">界線與守則</a>、<a href="#ty">Typeless 語音</a>、<a href="#chrome">Chrome 裡的 Gemini</a></td><td>裝好語音輸入，用說的下第一個指令；用側邊欄 3 分鐘查完一篇資料</td></tr>
+      <tr><td>14:15–14:45</td><td><a href="#prompt">六要素</a>＋<a href="#design">帶入病人條件</a></td><td>寫出一份團體教案提示語，讓 AI 當督導挑出做不到、不安全的地方</td></tr>
+      <tr><td>14:45–15:15</td><td><a href="#img">生圖教案</a>、<a href="#slides">AI 生簡報</a>、<a href="#canva">Canva 魔法圖層</a></td><td>生出一組圖卡並局部修改；搞清楚 Gemini 該用「任務」還是「對話」</td></tr>
+      <tr><td>15:15–15:25</td><td>休息</td><td></td></tr>
+      <tr><td>15:25–16:05</td><td><a href="#code">寫程式：網頁遊戲、紙本生成器、資料庫</a>、<a href="#html">HTML 簡報</a>、<a href="#share">Gemini 分享</a>、<a href="#oc">OpenCode</a></td><td>請 AI 做出一個可以玩的網頁教案，拿到一個可以分享的網址</td></tr>
+      <tr><td>16:05–16:25</td><td><a href="#gh">上傳 GitHub</a></td><td>註冊、上傳、用手機打開自己的教案網頁</td></tr>
+      <tr><td>16:25–16:30</td><td><a href="#end">課後任務、粉專領教案</a></td><td>追蹤粉專，之後的新教案直接領</td></tr>
+    </tbody>
+  </table></div>
+  <div class="grid3" style="margin-top:4px">
+    <div class="b3"><h4>要先準備的帳號</h4><p style="margin:0">個人 Google 帳號（Gemini、Chrome）、ChatGPT 免費帳號、Claude 免費帳號。三個都免費，用個人信箱註冊即可；院內公務帳號可能被管理者關閉 AI 功能。</p></div>
+    <div class="b3"><h4>要先裝的軟體</h4><p style="margin:0">Typeless（電腦與手機）、OpenCode 桌面版（選裝，見<a href="#oc">OpenCode</a>）。公務電腦不能裝軟體的同仁，用手機或自備筆電。</p></div>
+    <div class="b3"><h4>要帶的題目</h4><p style="margin:0">想一個你下週就要帶的團體：對象（病房／日間／社區復健）、人數、時間、想練什麼。今天所有練習都用你自己的題目做。</p></div>
+  </div>
+</section>
+
+<!-- rules -->
+<section id="rules">
+  <div class="sec-head"><div class="num">1</div><div><h2>AI 能幫什麼、不能信什麼，以及精神科的資料界線</h2><p>把 AI 當成「打草稿很快、但沒進過病房的實習生」。治療師才是最後簽名的人。</p></div></div>
+  <div class="grid2">
+    <div class="card" style="margin:0">
+      <h3><span class="pill">擅長</span>交給 AI 打草稿的事</h3>
+      <div class="tbl"><table style="min-width:0">
+        <thead><tr><th>擅長的事</th><th>活動室可以這樣說</th></tr></thead>
+        <tbody>
+          <tr><td>發想與變化</td><td>「給我 10 個適合 8 人團體、坐著就能做、20 分鐘內完成的手部精細動作活動。」</td></tr>
+          <tr><td>分級</td><td>「把這個摺紙活動分成三個難度，分別給注意力 5 分鐘、15 分鐘、30 分鐘的個案。」</td></tr>
+          <tr><td>改寫語氣與格式</td><td>「把這份活動流程改成給新進治療師看的帶領稿，每步驟一句話加一個提醒。」</td></tr>
+          <tr><td>生圖、做簡報、寫網頁</td><td>「做一組 8 張『情緒辨識』圖卡」「做一個可以在平板上玩的配對遊戲」。</td></tr>
+          <tr><td>整理與查核</td><td>「列出這份教案裡所有需要剪刀、牙籤等尖銳物的步驟。」</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="card" style="margin:0">
+      <h3><span class="pill o">小心</span>四個一定要人工把關的地方</h3>
+      <ul>
+        <li><b>幻覺：</b>它會一本正經地編出不存在的量表、文獻與數據。要出處就要求附連結或 DOI，自己點開至少一篇。</li>
+        <li><b>不懂你的病人：</b>它不知道這位個案有手抖、嗜睡、吞食風險或自傷史。這些條件要你在提示語裡寫進去（見<a href="#design">帶入病人條件</a>）。</li>
+        <li><b>安全盲點：</b>AI 很愛建議剪刀、牙籤、繩子、小珠子。病房的物品管制規範只有你知道。</li>
+        <li><b>時效與地區：</b>法規、補助、量表版本可能是舊的或國外的。以院內規範與最新公告為準。</li>
+      </ul>
+      <div class="prompt"><span class="label">最省事的保險句（貼在任何教案提示語最後）</span>回答之前，請先列出你「假設」了哪些關於病人的條件；凡是會因病人診斷、藥物副作用、認知程度或病房物品管制而不同的建議，請標【需治療師確認】。</div>
+    </div>
+  </div>
+
+  <div class="three" style="margin-top:14px">
+    <div class="no"><div class="big">不</div><h3>不輸入可識別的病人資料</h3><p>姓名、病歷號、身分證字號、床號、完整生日、照片、具體到可指認的病史組合，都不能貼進 AI。要討論個案，先去識別化：「50 多歲男性、思覺失調症、負性症狀為主、右手輕微震顫」就夠用了。</p></div>
+    <div class="no"><div class="big">不</div><h3>不上傳院內未公開文件</h3><p>病房作業規範、評鑑資料、未公開的統計與公文，不放進免費的公開 AI 工具。已公開的衛教單張、政府網站資料可以用。</p></div>
+    <div class="no"><div class="big">不</div><h3>不直接採用未覆核的內容</h3><p>AI 寫的活動流程、安全提醒、量表解讀，都要治療師核對後才用在病人身上。AI 不做診斷、不決定介入，只幫你把教案做出來。</p></div>
+  </div>
+  <div class="note"><b>判斷小口訣：</b>「如果這段文字被貼到護理站公布欄，別人能不能認出是哪一位病人？」能認出來，就不能貼進 AI。</div>
+
+  <div class="card">
+    <h3>帶同仁與實習生用 AI 做教案，先講清楚的四件事</h3>
+    <div class="grid2">
+      <div class="b3"><h4>隱私</h4><p style="margin:0">上面的三不原則。團體照片、病人作品照片要放進 AI 或上網前，先確認同意書與院內規範。</p></div>
+      <div class="b3"><h4>查核</h4><p style="margin:0">年份、數字、量表內容、藥物副作用的描述都要對回可信來源；不確定的請資深同仁確認。</p></div>
+      <div class="b3"><h4>著作權</h4><p style="margin:0">圖片與音樂要合法：優先用自己拍的、AI 生成的或確認可商用的素材。老歌在活動室帶唱沒問題，公開上網要注意授權。</p></div>
+      <div class="b3"><h4>誠信</h4><p style="margin:0">教案、報告註明哪些部分用了 AI、自己改了什麼。重點放在「判斷與調整」，那才是治療師的專業。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="ty">
+  <div class="sec-head"><div class="num">2</div><div><h2>工具一：Typeless 語音輸入</h2><p>在任何軟體裡按一下快捷鍵開始講話，再按一下就變成整理好的文字，會自動去掉「嗯、那個」並補上標點。</p></div></div>
+  <div class="card tool">
+    <div class="tool-top">
+      <div class="logo" style="background:var(--ink)">T</div>
+      <div style="flex:1;min-width:220px">
+        <h3 style="margin:0">Typeless｜AI 語音鍵盤</h3>
+        <div><span class="pill">Mac</span><span class="pill">Windows</span><span class="pill">iPhone</span><span class="pill">Android</span></div>
+      </div>
+      <a class="btn o" href="https://www.typeless.com/?via=a98a08" target="_blank" rel="noopener">前往官網下載</a>
+    </div>
+    <p>電腦和手機用<b>同一個帳號</b>登入，個人字典與設定會自動同步。請點選你的裝置：</p>
+    <div class="tabs" role="tablist">
+      <button class="tab on" data-g="ty" data-t="ty-win">Windows 電腦</button>
+      <button class="tab" data-g="ty" data-t="ty-mac">Mac 電腦</button>
+      <button class="tab" data-g="ty" data-t="ty-ios">iPhone</button>
+      <button class="tab" data-g="ty" data-t="ty-and">Android 手機</button>
+    </div>
+
+    <div class="panel on" id="ty-win" data-g="ty">
+      <div class="grid2">
+        <div>
+          <h4>Windows 安裝步驟</h4>
+          <ol class="steps">
+            <li>點上方「前往官網下載」，按 <b>Download for Windows</b>，下載安裝檔（.exe）。</li>
+            <li>到「下載」資料夾雙擊安裝檔，依畫面完成安裝。若跳出「Windows 已保護您的電腦」，確認來源是 Typeless 官網後，按「其他資訊 → 仍要執行」。</li>
+            <li>開啟 Typeless，用 Google、Apple 或 Email 登入。</li>
+            <li>允許使用<b>麥克風</b>。若沒有聲音：Windows「設定 → 隱私權與安全性 → 麥克風」，打開「讓桌面應用程式存取麥克風」。</li>
+            <li>點進任一文字框，按一下 <kbd>右 Alt</kbd> 試講一句，再按一下結束，確認文字有貼上。</li>
+            <li>到「設定」把語言改成<b>繁體中文（台灣）</b>，否則可能輸出簡體字。</li>
+          </ol>
+        </div>
+        <div>
+          <h4>Windows 預設快捷鍵</h4>
+          <div class="keys">
+            <div class="key"><div class="k"><kbd>右 Alt</kbd></div>聽寫：按一下開始，再按一下結束</div>
+            <div class="key"><div class="k"><kbd>右 Alt</kbd> + <kbd>右 Shift</kbd></div>翻譯</div>
+            <div class="key"><div class="k"><kbd>右 Alt</kbd> + <kbd>空白鍵</kbd></div>問任何事／改寫選取的文字</div>
+          </div>
+          <p style="margin-top:10px">「右 Alt」是空白鍵右邊那一顆（鍵盤上印 AltGr 的也可以）。</p>
+          <p><b>試試看：</b>打開記事本或 Word，點進文件裡，按一下 <kbd>右 Alt</kbd>，說：「今天的團體是報紙球投籃，以下分三點。」說完再按一下 <kbd>右 Alt</kbd>，看看它怎麼整理。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="ty-mac" data-g="ty">
+      <div class="grid2">
+        <div>
+          <h4>Mac 安裝步驟</h4>
+          <ol class="steps">
+            <li>點上方「前往官網下載」，按 <b>Download for macOS</b>，下載 .dmg 檔。</li>
+            <li>打開 .dmg，把 Typeless 拖進「應用程式」資料夾。</li>
+            <li>開啟 Typeless（第一次開啟若出現提醒，按「打開」），用 Google、Apple 或 Email 登入。</li>
+            <li>授權<b>麥克風</b>與<b>輔助使用</b>（讓文字能貼進任何輸入框）。若沒跳出視窗，到「系統設定 → 隱私權與安全性」手動開啟。</li>
+            <li>到「設定」把語言改成<b>繁體中文（台灣）</b>。</li>
+          </ol>
+        </div>
+        <div>
+          <h4>Mac 預設快捷鍵</h4>
+          <div class="keys">
+            <div class="key"><div class="k"><kbd>Fn</kbd></div>聽寫：按一下開始，再按一下結束</div>
+            <div class="key"><div class="k"><kbd>Fn</kbd> + <kbd>左 Shift</kbd></div>翻譯</div>
+            <div class="key"><div class="k"><kbd>Fn</kbd> + <kbd>空白鍵</kbd></div>問任何事／改寫選取的文字</div>
+          </div>
+          <p style="margin-top:10px">如果按 <kbd>Fn</kbd> 會切換輸入法：到「系統設定 → 鍵盤」把 Fn 的功能改掉，或在 Typeless 換一組快捷鍵。</p>
+          <p><b>試試看：</b>打開備忘錄，點進文字框，按一下 <kbd>Fn</kbd> 說一段話，再按一下 <kbd>Fn</kbd> 結束。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="ty-ios" data-g="ty">
+      <div class="grid2">
+        <div>
+          <h4>iPhone 安裝步驟</h4>
+          <ol class="steps">
+            <li>App Store 搜尋「<b>Typeless</b>」下載（或點上方按鈕，用手機開啟官網下載）。</li>
+            <li>開啟 App，用和電腦<b>同一個帳號</b>登入。</li>
+            <li>到 iPhone「設定 → App → Typeless → 鍵盤」，打開 <b>Typeless</b> 和 <b>允許完整取用</b>（語音要送到雲端整理，所以需要這個權限）。</li>
+            <li>允許使用麥克風，在 App 裡把語言設為<b>繁體中文（台灣）</b>。</li>
+          </ol>
+        </div>
+        <div>
+          <h4>iPhone 使用方式</h4>
+          <ol class="steps">
+            <li>打開 LINE、備忘錄或任何可以打字的地方。</li>
+            <li>長按鍵盤左下角的 <b>🌐 地球鍵</b>，切換到 Typeless 鍵盤。</li>
+            <li>點 <b>Speak</b> 開始說話，說完再點一次，整理好的文字就會出現（三個按鈕的用法見下方「手機三個按鈕」）。</li>
+            <li>要換回注音，同樣長按地球鍵切換。</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="ty-and" data-g="ty">
+      <div class="grid2">
+        <div>
+          <h4>Android 安裝步驟</h4>
+          <ol class="steps">
+            <li>Google Play 搜尋「<b>Typeless</b>」下載安裝。</li>
+            <li>開啟 App，用和電腦<b>同一個帳號</b>登入。</li>
+            <li>依 App 引導啟用 Typeless 鍵盤（通常在「設定 → 系統 → 語言與輸入 → 螢幕鍵盤」；各品牌手機位置略有不同）。</li>
+            <li>允許使用麥克風，在 App 裡把語言設為<b>繁體中文（台灣）</b>。</li>
+          </ol>
+        </div>
+        <div>
+          <h4>Android 使用方式</h4>
+          <ol class="steps">
+            <li>打開 LINE、Gmail 或任何可以打字的地方。</li>
+            <li>點鍵盤右下角的<b>鍵盤圖示</b>（或下拉通知列的「選擇輸入法」），切換到 Typeless。</li>
+            <li>點 <b>Speak</b> 開始說話，說完再點一次，文字就會出現（三個按鈕的用法見下方「手機三個按鈕」）。</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="shortcut-box">
+      <h3>電腦快捷鍵：三個功能、三組按鍵｜按一下開始，再按一下結束</h3>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>功能</th><th>Mac 預設</th><th>Windows 預設</th><th>怎麼用</th></tr></thead>
+          <tbody>
+            <tr><td>聽寫<br><small>Dictate</small></td><td><kbd>Fn</kbd></td><td><kbd>右 Alt</kbd></td><td>點進文字框 → 按一下 → 說話（畫面出現 Voice bar）→ 再按一下，整理好的文字直接貼上</td></tr>
+            <tr><td>翻譯<br><small>Translate</small></td><td><kbd>Fn</kbd> + <kbd>左 Shift</kbd></td><td><kbd>右 Alt</kbd> + <kbd>右 Shift</kbd></td><td>按一下 → 在 Voice bar 選目標語言 → 用中文說 → 按主快捷鍵（<kbd>Fn</kbd>／<kbd>右 Alt</kbd>）結束，譯文直接貼上</td></tr>
+            <tr><td>問任何事<br><small>Ask anything</small></td><td><kbd>Fn</kbd> + <kbd>空白鍵</kbd></td><td><kbd>右 Alt</kbd> + <kbd>空白鍵</kbd></td><td>先選取文字 → 按一下 → 說「改得客氣一點」「縮成三句」→ 按主快捷鍵結束，選取的文字直接被替換；沒選文字就是直接提問，答案出現在小卡片</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="grid2" style="margin-top:14px">
+        <div class="note teal" style="margin:0"><b>改快捷鍵：</b>Typeless 視窗左下角「設定」→ Keyboard shortcuts → 點目前的按鍵 → 按新的組合 → 到文字框測試。外接鍵盤可按「Add another」再加一組。</div>
+        <div class="note" style="margin:0"><b>小提醒：</b>Mac 的 <kbd>Fn</kbd> 若被設成「切換輸入法」，到系統設定 → 鍵盤改掉，或換快捷鍵。Windows 的「右 Alt」是空白鍵右邊那顆（AltGr 也可）。</div>
+      </div>
+    </div>
+
+    <div class="note"><b>費用：</b>免費版每週有字數上限（2026 年 9 月起約 2,000 字，大約三、四則較長的團體紀錄就會用完），適合先試用；若每天都要用，可評估 Pro 方案（年繳約每月 12 美元）。實際額度與價格以官網為準。</div>
+  </div>
+
+  <div class="card">
+    <h3>手機上怎麼用？三個活動室現場情境</h3>
+    <div class="grid3">
+      <div><span class="pill a">情境</span><b>回覆家屬 LINE</b><br>切換 Typeless 鍵盤，說：「回覆家屬，下週三下午兩點的家屬座談會，請帶個案平常喜歡的音樂清單，語氣親切。」</div>
+      <div><span class="pill a">情境</span><b>團體結束馬上記重點</b><br>走回護理站的路上，打開備忘錄口述剛剛的團體流程與個案反應（用代號，不說姓名），回座再貼進紀錄。</div>
+      <div><span class="pill a">情境</span><b>現場翻譯一句話</b><br>在 Typeless 裡用翻譯功能，說中文直接輸出越南文或印尼文，傳給外籍照顧者，重要內容仍以正式書面說明為準。</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>手機三個按鈕學會就夠：Speak、左下角的筆、翻譯</h3>
+    <div class="grid3 btn3">
+      <div class="b3">
+        <div class="b3-ico" style="background:var(--teal)">🎙</div>
+        <h4>Speak：口述輸入</h4>
+        <ul>
+          <li>點進輸入框 → 點 <b>Speak</b> 一下 → 說話 → 再點一下</li>
+          <li>贅詞、重複、說錯又改口的，都會自動清乾淨</li>
+          <li>說「第一點、第二點」會自動排成清單</li>
+          <li>鍵盤收起來也能繼續聽（背景聽寫）</li>
+        </ul>
+      </div>
+      <div class="b3">
+        <div class="b3-ico" style="background:var(--orange)">✏️</div>
+        <h4>左下角的筆：Speak to edit</h4>
+        <ul>
+          <li>先<b>選取</b>要改的文字（手打的、口述的、貼上的都行）</li>
+          <li>點左下角的<b>筆</b> → 說你要怎麼改 → 再點一下</li>
+          <li>例：「改得親切一點」「縮成兩句」「改成條列」「改成個案聽得懂的說法」</li>
+          <li>沒選文字時，可直接說「幫我寫一段回診提醒」（Help me write）</li>
+        </ul>
+      </div>
+      <div class="b3">
+        <div class="b3-ico" style="background:#6B5FD6">🌐</div>
+        <h4>翻譯：長按 Speak 往上滑</h4>
+        <ul>
+          <li><b>長按 Speak → 往上滑 → 選目標語言</b></li>
+          <li>用中文說 → 點 Speak 結束 → 輸入框直接出現譯文</li>
+          <li>要新增語言：App 的 Account → Settings → <b>Translation targets</b> → Add another language，拖曳可排順序</li>
+          <li>用法：回外籍照顧者 LINE、提醒回診時間、交代活動要帶的東西</li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid2" style="margin-top:14px">
+      <div class="note teal" style="margin:0"><b>個人字典與個人化：</b>Account → Dictionary，加入科內用詞（職能治療、感覺統合、現實導向、錐體外症狀）、治療師姓名、院內系統名稱。語氣不用手動設定，Typeless 會自動學你的用字，並依 App 調整（LINE 較輕鬆、Email 較正式）；電腦版可在設定 → Personalization 看學習進度或關閉。</div>
+      <div class="note" style="margin:0"><b>現場練習：</b>用 Speak 口述一段「下次回診提醒」→ 選取其中一句 → 用筆改成「更親切」→ 長按 Speak 翻成越南文。三個按鈕一次練完。練習時用「個案A」代稱，不說姓名。</div>
+    </div>
+  </div>
+
+  <div class="card alt">
+    <h3>沒有 Typeless，用 ChatGPT 與 Gemini 的麥克風也能做到</h3>
+    <div class="grid2">
+      <div>
+        <h4>ChatGPT：兩個麥克風，功能不同</h4>
+        <ul>
+          <li><b>輸入框旁的「聽寫」麥克風</b>：把你說的話轉成文字放進輸入框，<b>送出前可以修改</b>（最接近 Typeless）</li>
+          <li><b>語音模式（Voice）</b>：即時對話，適合邊聊邊釐清；結束後對話會留下文字紀錄</li>
+          <li>做法：先用聽寫說完 → 看文字 → 補一句「請整理成條列並去掉口語贅詞，保留原意」</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Gemini：手機 App 與 Chrome 側邊欄</h4>
+        <ul>
+          <li>Gemini App 輸入框的麥克風＝聽寫；<b>Live</b>＝即時對話</li>
+          <li>Chrome 側邊欄的 Gemini 也能用麥克風，口述「幫我整理這一頁」</li>
+          <li>Google 文件：工具 → 語音輸入，口述長文再貼給 AI</li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid2" style="margin-top:6px">
+      <div class="prompt" style="margin:0"><span class="label">口述整理指令</span>以下是我用語音口述的內容，請：
+1. 去掉口語贅詞與重複，保留我的原意與用字
+2. 整理成條列或段落（依內容判斷）
+3. 專有名詞與數字若不確定，用【？】標出來讓我確認
+4. 最後用一句話總結我想要你做什麼
+口述內容：<button class="copy">複製</button></div>
+      <div class="note teal" style="margin:0"><b>把這段存成「口述整理」指令：</b>每次用聽寫說完，貼這段在前面，就能達到 Typeless 的整理效果；ChatGPT 可存成專案指示，Gemini 可存成 Gem。這樣免費版字數用完，或院內電腦不能裝軟體時，也有替代方案。</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>不裝任何軟體：Mac 與 Windows 本來就有聽寫</h3>
+    <div class="grid2">
+      <div class="b3">
+        <span class="pill">Mac</span>
+        <h4 style="margin-top:8px">設定一次，之後按兩下就能講</h4>
+        <ol class="steps">
+          <li><b>開啟聽寫</b><br>系統設定 → 鍵盤 → 「聽寫」打開；語言選中文（繁體），可加英文</li>
+          <li><b>設定快速鍵</b><br>預設<b>按兩下 <kbd>Fn</kbd></b>（🌐）；可改成按 <kbd>Control</kbd> 兩下，避免跟 Typeless、Gemini 的 fn 衝突</li>
+          <li><b>叫出與結束</b><br>點進文字框 → 按快速鍵 → 出現麥克風就說；說「逗號」「換行」會打出來；按 <kbd>Esc</kbd> 結束</li>
+        </ol>
+      </div>
+      <div class="b3">
+        <span class="pill a">Windows 10／11</span>
+        <h4 style="margin-top:8px">一組快速鍵：<kbd>Win</kbd> + <kbd>H</kbd></h4>
+        <ol class="steps">
+          <li><b>確認語言</b><br>右下角輸入法切到「中文（台灣）注音」，語音輸入跟著鍵盤語言</li>
+          <li><b>叫出與結束</b><br>點進文字框 → 按 <kbd>Win</kbd> + <kbd>H</kbd> → 出現麥克風就說；再按一次或說「停止聽寫」結束</li>
+          <li><b>設定</b><br>工具列齒輪開「自動標點」；設定 → 時間與語言 → 語音，可選麥克風、下載語音包</li>
+        </ol>
+      </div>
+    </div>
+    <div class="note" style="margin:14px 0 0"><b>跟 Typeless 的差別：</b>內建聽寫是「說什麼就打什麼」，贅詞與改口都會留著；說完貼到 ChatGPT／Gemini 加上上面的「口述整理」指令，就能得到一樣乾淨的結果。院內公務電腦不能裝軟體時，這是最穩的做法。</div>
+  </div>
+
+  <div class="card">
+    <h3>AI 會議記錄：三條路線，依會議型態選</h3>
+    <p>科內會議、個案討論會、跨團隊會議都用得到。先看是線上、實體還是短會，再選路線。</p>
+    <div class="grid3 btn3">
+      <div class="b3">
+        <span class="pill">線上會議</span>
+        <h4 style="margin-top:8px">A 平台內建筆記</h4>
+        <ul>
+          <li><b>Google Meet「幫我做筆記」</b>：<b>目前不支援中文</b>（只有英、法、德、義、日、韓、葡、西 8 種），中文會議請走 B 或 C</li>
+          <li><b>Zoom AI Companion、Teams Copilot</b>：會後摘要、可問「剛剛誰負責什麼」；兩者的摘要語言都含中文，請確認院方方案</li>
+          <li>優點：分講者、不漏段；缺點：要院方方案與管理員開啟</li>
+        </ul>
+      </div>
+      <div class="b3">
+        <span class="pill o">實體會議</span>
+        <h4 style="margin-top:8px">B 錄音 → 轉錄 → AI 整理</h4>
+        <ul>
+          <li><b>ChatGPT Record 模式</b>（Mac App，付費方案）：官方單次上限 4 小時，實測約 2 小時會自動結束；英文最準，中文要校對人名</li>
+          <li><b>手機錄音</b>：iPhone 語音備忘錄、Pixel 錄音機 → 把文字貼給 AI</li>
+          <li><b>Gemini 上傳音檔</b>：免費 10 分鐘，AI Pro／Ultra 3 小時；<b>NotebookLM</b> 上傳錄音可問決議並附出處</li>
+        </ul>
+      </div>
+      <div class="b3">
+        <span class="pill a">短會／一對一</span>
+        <h4 style="margin-top:8px">C 會後口述決議</h4>
+        <ul>
+          <li>會議最後 3 分鐘，主持人口頭複述決議與待辦，大家當場確認</li>
+          <li>散會後用 Typeless／聽寫口述一次 → 貼給 AI 整理</li>
+          <li>優點：最快、最準（當場確認過）；適合交班、個案討論後的分工確認</li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid2" style="margin-top:14px">
+      <div class="prompt" style="margin:0"><span class="label">會議記錄指令</span>以下是會議逐字稿（或口述內容）。請整理成會議記錄：
+1. 會議基本資訊：主題、日期、出席者（不確定的標【？】）
+2. 決議事項：一句一點，寫清楚「決定了什麼」
+3. 待辦事項表：事項｜負責人｜期限｜需要的資源
+4. 待確認／未決事項
+5. 逐字稿中提到的數字與日期，請原文列出讓我核對
+不要加入逐字稿沒有的內容；語氣中性，不評價任何人的發言。<button class="copy">複製</button></div>
+      <div class="note red" style="margin:0"><b>不管哪條路線，守住三件事：</b>
+        <ul style="margin-bottom:0">
+          <li>開錄前告知並取得同意；涉及病人的個案討論，錄音與逐字稿都要先去識別化，敏感議題（人事、考核）另外處理</li>
+          <li>AI 整理完<b>一定要人核對</b>數字、人名、期限，再發出</li>
+          <li>紀錄存在院方核可的空間，不留在個人帳號</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>講得好，AI 才整理得好</h3>
+      <ul>
+        <li><b>先想三句再開口</b>：要寫給誰、重點是什麼、要什麼格式。</li>
+        <li><b>一口氣講完</b>：不用怕講錯，講錯直接說「不對，改成…」，AI 會幫你修正。</li>
+        <li><b>口述格式</b>：「以下分三點」「第一點…」，輸出就會自動條列。</li>
+        <li><b>先講再修</b>：選取一段文字，按「問任何事」快捷鍵，說「改得更口語」「縮短成兩句」，原文會直接被替換。</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>設定「個人字典」</h3>
+      <p>把科內常用、容易被聽錯的詞加入字典，辨識率會明顯提升：</p>
+      <p><span class="pill">職能治療</span><span class="pill">現實導向</span><span class="pill">感覺統合</span><span class="pill">錐體外症狀</span><span class="pill">日間病房</span><span class="pill">社區復健中心</span><span class="pill">團體動力</span><span class="pill">工作訓練</span></p>
+      <div class="note red" style="margin-bottom:0"><b>注意：</b>Typeless 在雲端處理語音。口述時<b>不要唸出病人姓名、病歷號、電話</b>等可識別資料，一律用「個案A」「60 多歲男性」代稱。</div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 Gemini desktop -->
+
+<section id="chrome">
+  <div class="sec-head"><div class="num">3</div><div><h2>Chrome 裡的 Gemini：做教案前，先把資料快速查完</h2><p>台灣已開放。瀏覽網頁時打開右側邊欄，直接問「這一頁」的內容，還能一次比較多個分頁。</p></div></div>
+  <div class="grid2">
+    <div class="card">
+      <h3>開啟方式</h3>
+      <ol class="steps">
+        <li>把 Chrome 更新到最新版（右上角「⋮ → 說明 → 關於 Google Chrome」）。</li>
+        <li>用個人 Google 帳號<b>登入 Chrome</b>（需年滿 18 歲）。</li>
+        <li>點瀏覽器右上角的 <b>Gemini 圖示</b>，右側會打開側邊欄。</li>
+        <li>沒看到圖示？在網址列輸入 <code>chrome://settings/ai</code> 檢查 AI 功能是否開啟。</li>
+      </ol>
+      <div class="note"><b>醫院公務電腦：</b>若是院內管理的瀏覽器或公務帳號，管理者可能關閉此功能，請依本院資訊規範使用；上課練習可用個人帳號。</div>
+    </div>
+    <div class="card">
+      <h3>四個最實用的功能</h3>
+      <ul>
+        <li><b>摘要這一頁</b>：打開一篇活動設計文章，問「用三句話說重點，材料與時間各是什麼」。</li>
+        <li><b>選取就問</b>：反白一段艱深文字，選「詢問 Gemini」，請它白話解釋。</li>
+        <li><b>多分頁比較</b>：在輸入框按 <kbd>+</kbd> 加入多個分頁，請它做成比較表。</li>
+        <li><b>串接 Google 服務</b>：把團體時間排進日曆、草擬 Gmail，送出前都會先請你確認。</li>
+      </ul>
+      <p style="color:var(--muted);font-size:.95rem">部分進階功能（例如自動代為操作網頁、Skills 指令庫）目前僅限特定地區、語言或付費方案。</p>
+    </div>
+  </div>
+  <div class="card">
+    <h3>試試看：用側邊欄讀一篇公開的活動設計文章</h3>
+    <p>打開任何一篇公開的團體活動或懷舊治療文章（政府網站、學會、期刊摘要都可以），在側邊欄貼上：</p>
+    <div class="prompt"><span class="label">Chrome 側邊欄提示語</span>請閱讀這一頁，整理成一份可以帶團體的素材：
+1. 這個活動的目標、對象、人數、時間、材料，各一行
+2. 步驟最多 6 點，每點不超過 20 個字
+3. 標出哪些步驟需要剪刀、牙籤、繩子等在精神科病房需要管制的物品，並各給一個替代做法
+4. 最後列出「這一頁沒有提到、但帶團體前應該先確認」的事項</div>
+    <div class="note" style="margin-top:12px"><b>和「寫程式」那一節的連結：</b>查完的素材直接複製，貼進<a href="#design">教案提示語</a>的【對象】【材料限制】裡，或貼給 AI 說「用這些素材做一個網頁遊戲」。</div>
+  </section>
+
+<!-- 5 compare -->
+
+<section id="prompt">
+  <div class="sec-head"><div class="num">4</div><div><h2>提示語六要素：先把「怎麼問」練成固定格式</h2><p>同一個要求，講清楚六件事，AI 的第一版就會接近可用。下一節再把病人的條件加進去。</p></div></div>
+  <div class="six">
+    <div class="el"><b>角色</b><small>請 AI 扮演誰？<br>例：精神科資深職能治療師</small></div>
+    <div class="el"><b>對象</b><small>寫給誰看？<br>例：日間病房 8 位成人個案</small></div>
+    <div class="el"><b>任務</b><small>要做什麼？<br>例：設計 40 分鐘的手工藝團體</small></div>
+    <div class="el"><b>限制</b><small>不能做什麼？<br>例：不能用剪刀、牙籤、繩子</small></div>
+    <div class="el"><b>格式</b><small>長什麼樣子？<br>例：流程表＋材料清單，一頁內</small></div>
+    <div class="el"><b>查核</b><small>怎麼自我檢查？<br>例：標出需治療師確認的地方</small></div>
+  </div>
+
+  <div class="card">
+    <h3>提示語組合器</h3>
+    <p>選一個範例帶入，或自己填，按「組合」就能複製去 Gemini、ChatGPT 或 Claude 使用。</p>
+    <div class="row">
+      <select id="preset" style="max-width:360px">
+        <option value="">— 選擇範例帶入 —</option>
+        <option value="group">病房團體：報紙球投籃（40 分鐘）</option>
+        <option value="sheet">紙本：A4 認知學習單</option>
+        <option value="family">家屬：一頁式活動說明</option>
+      </select>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>① 角色</label><textarea id="p1" rows="2"></textarea></div>
+      <div class="field"><label>② 對象</label><textarea id="p2" rows="2"></textarea></div>
+      <div class="field"><label>③ 任務</label><textarea id="p3" rows="2"></textarea></div>
+      <div class="field"><label>④ 限制</label><textarea id="p4" rows="2"></textarea></div>
+      <div class="field"><label>⑤ 格式</label><textarea id="p5" rows="2"></textarea></div>
+      <div class="field"><label>⑥ 查核</label><textarea id="p6" rows="2"></textarea></div>
+    </div>
+    <div class="row"><button class="btn" id="build">組合</button></div>
+    <div class="prompt" id="builtBox" style="display:none"><span class="label">組合好的提示語（需要時在最後貼上你的原始教案或素材）</span><span id="built"></span><button class="copy" data-src="built">複製</button></div>
+  </div>
+  <div class="note teal"><b>語音小技巧：</b>六要素不用打字，按一下 Typeless 快捷鍵，照順序「講」出來就好：「你是精神科資深職能治療師，對象是日間病房八位成人，請幫我設計…」。</div>
+</section>
+
+<!-- 9 translate -->
+
+<!-- design -->
+<section id="design">
+  <div class="sec-head"><div class="num">5</div><div><h2>教案提示語：把病人的條件帶進去，再讓 AI 當督導挑錯</h2><p>AI 設計的活動到了病房會「卡住」，多半不是創意不夠，而是設計時沒把病人的身體、認知與安全條件放進來。這一節是今天最重要的 30 分鐘。</p></div></div>
+
+  <div class="card">
+    <h3>第一步：用「帶入條件」的教案提示語，一次講清楚六件事</h3>
+    <p style="margin-top:0">下面這份範本涵蓋精神科職能治療團體最常需要交代的條件。用 Typeless 照著「講」一遍，比打字快三倍。括號裡的內容換成你的團體。</p>
+    <div class="prompt"><span class="label">教案提示語範本（團體活動）</span>你是精神科資深職能治療師，請幫我設計一個團體活動教案。
+【對象】（例：急性病房 8 位成人個案，診斷以思覺失調症與雙相情緒障礙為主，目前症狀穩定；2 位有手部震顫，1 位閱讀能力有限）
+【目標】（例：練習輪流、等待與簡單的社交互動；次要目標是手部精細動作）
+【時間與場地】（例：40 分鐘，病房活動室，有 2 張大桌、投影機，沒有網路）
+【材料限制】（例：不能有剪刀、牙籤、繩子與可吞食的小物；只能用紙、蠟筆、彩色筆、大顆積木）
+【分級】請把核心活動分成三個難度：注意力 5 分鐘、15 分鐘、30 分鐘的個案各一版，並寫出帶領者怎麼在同一場團體裡同時進行。
+【輸出格式】流程表（時間、步驟、帶領者說的話、觀察重點）＋ 材料清單 ＋ 3 個常見狀況的處理（拒絕參加、中途離席、搶材料）。
+【限制】不新增我沒說的病人資訊；不引用你不確定的量表或文獻；需要我確認的地方標【需治療師確認】。
+如果還有不清楚的地方，在你回答我之前，先問我問題。</div>
+    <div class="grid3" style="margin-top:12px">
+      <div class="b3"><h4>個別治療版</h4><p style="margin:0">把【對象】改成一位去識別化個案（年齡層、診斷、功能現況、動機），【目標】寫成可觀察的行為，例：「能在提示下完成 3 步驟的工作任務」。</p></div>
+      <div class="b3"><h4>兒童青少年版</h4><p style="margin:0">加上發展階段、感覺調節特性與家長是否在場；材料限制改成「可洗、無小零件」；請 AI 同時給「給家長的一句話說明」。</p></div>
+      <div class="b3"><h4>社區復健中心版</h4><p style="margin:0">加上「與就業／生活自理的連結」，請 AI 把活動延伸成一週的家庭作業，並附一張可列印的自我記錄表。</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>第二步：讓 AI 當督導，出發前先把做不到、不安全的地方挑出來</h3>
+    <p style="margin-top:0">把 AI（或自己）寫好的教案貼回去，用下面這段請它換一個角色挑錯。這比你自己重看三遍更容易發現盲點。</p>
+    <div class="prompt"><span class="label">督導挑錯提示語</span>你現在是精神科職能治療的臨床督導，請審查下面這份教案，不要重寫，只列問題。依序檢查：
+1. 安全：哪些材料或步驟在急性病房會違反物品管制，或對有自傷、吞食風險的個案不安全？
+2. 做得到嗎：哪些步驟對有手部震顫、嗜睡、注意力短、閱讀能力有限的個案太難？給出降階方法。
+3. 身分與尊嚴：哪些題材或獎勵方式會讓成人覺得「被當小孩」？
+4. 時間：每個步驟的時間估計合理嗎？第一次帶通常會超時多少？
+5. 帶領者負荷：一位治療師加一位助理帶 8 人，哪裡會忙不過來？
+請用表格輸出：問題、風險等級（高／中／低）、建議修改。最後寫一句「這份教案可以直接帶／改完再帶／建議重做」。
+【教案】（貼上）</div>
+    <div class="grid2" style="margin-top:12px">
+      <div class="r-bad"><b>常見被挑出來的問題</b><ul>
+        <li>材料含剪刀、牙籤、長繩、小珠子</li>
+        <li>規則超過 3 條，失智或負性症狀明顯的個案記不住</li>
+        <li>用兒歌、貼紙、拍手獎勵成人</li>
+        <li>40 分鐘排了 7 個步驟，實際只做得完 4 個</li>
+        <li>需要閱讀長文字的學習單</li>
+      </ul></div>
+      <div class="r-good"><b>通常怎麼改</b><ul>
+        <li>剪刀 → 預先裁好；牙籤 → 棉花棒；繩 → 寬布條或毛根</li>
+        <li>一個活動只練一兩件事，成功率要高，再談挑戰</li>
+        <li>題材用成人熟悉的工作、家務、老歌、節慶</li>
+        <li>每個步驟標「必做／可略過」，超時就略過</li>
+        <li>文字改成圖＋一句話，字級 20pt 以上</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>第三步：同一份教案，要求四種成品</h3>
+    <p style="margin-top:0">教案確認後，不用重新解釋，接著說：</p>
+    <div class="grid2">
+      <div class="prompt" style="margin:0"><span class="label">接著要紙本</span>把這個活動做成一張 A4 可列印的學習單：字級 20pt 以上、留白多、最多 6 格，右上角放日期與姓名欄。先給我版面說明，再用 HTML 做出可以直接列印的版本。</div>
+      <div class="prompt" style="margin:0"><span class="label">接著要圖卡</span>為這個活動生成 8 張情境圖卡：扁平插畫風、亞洲成人、每張只有一個動作、圖中不要有任何文字、同一組要同樣的畫風與配色。先給第 1 張讓我確認風格。</div>
+      <div class="prompt" style="margin:0"><span class="label">接著要簡報</span>做成 10 頁帶團體用的投影片：一頁一個步驟、一句話、一張示意圖，最後一頁是今天的回顧問題。字要大，深色字淺色底。</div>
+      <div class="prompt" style="margin:0"><span class="label">接著要網頁遊戲</span>把這個活動做成一個單一檔案的 HTML 網頁遊戲，可以在平板上用手指點選；按鈕要大、顏色對比高、有音效開關、分數顯示。做好後告訴我怎麼存檔和打開。</div>
+    </div>
+    <div class="note teal" style="margin:12px 0 0"><b>為什麼要「同一個對話接著說」：</b>AI 已經知道你的病人條件與材料限制，四種成品都會自動遵守。開新對話就要重講一遍，而且很容易漏。</div>
+  </div>
+</section>
+
+<!-- img -->
+<section id="img">
+  <div class="sec-head"><div class="num">6</div><div><h2>生圖類教案：建議用 ChatGPT 做、Gemini 當免費備援</h2><p>情境圖卡、順序卡、找不同、著色圖、情緒辨識卡，這些「一組要長得一樣」的教案，重點不是會畫，而是畫完能指定位置小修、而且整組風格一致。</p></div></div>
+
+  <div class="card">
+    <h3>結論先講：兩個都能生圖，教案類建議以 ChatGPT 為主</h3>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th>ChatGPT（建議主力）</th><th>Gemini（免費備援、文字圖卡）</th><th>Claude</th></tr></thead>
+      <tbody>
+        <tr><td>怎麼開始</td><td>對話框「＋」→「製作圖像」，或直接說「請生成一張圖」</td><td>對話框「＋」→「建立圖像」（Nano Banana 模型），可選顯示比例與格式</td><td>不生照片式圖片</td></tr>
+        <tr><td>局部修改</td><td>點圖打開編輯器，用「留言」點在要改的位置打字，<b>只改那一處</b></td><td>用文字說「只改標題底色」；講師實測有時整張都變、還出現錯字（見下方截圖）</td><td>—</td></tr>
+        <tr><td>一組風格一致</td><td>在同一個對話接著說「第 2 張，同樣風格」，一致性好；可上傳參考圖</td><td>可以，但偶爾會換畫風，要多生幾次挑</td><td>—</td></tr>
+        <tr><td>圖裡的中文字</td><td>進步很多，但仍要逐字核對</td><td>中文字與資訊圖卡排版表現好</td><td>用 HTML／SVG 做文字 100% 正確的圖卡</td></tr>
+        <tr><td>免費額度</td><td>免費帳號每天有張數上限，用完要等或隔天</td><td>免費帳號可用，Google 沒有公布固定張數，額度會隨當天負載調整；大量用需付費方案</td><td>免費</td></tr>
+        <tr><td>適合</td><td>情境卡、順序卡、找不同、著色線稿、整套教案圖</td><td>單張衛教圖卡、有中文標題的海報初稿、額度用完時的備援</td><td>表格型、步驟型圖卡；寫好提示詞再貼到 ChatGPT／Gemini 生成</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note" style="margin:10px 0 0"><b>Gemini 到底行不行？</b>行，而且免費。單張、要中文字、要快，就用它。但教案通常是「一組 8 張、風格要一樣、改一處不要動其他」，這三件事目前 ChatGPT 的編輯器做得比較穩，所以課堂示範以 ChatGPT 為主。兩邊都用時，把 Claude 寫好的提示詞貼過去，兩家各生一版再挑。</div>
+  </div>
+
+  <div class="card">
+    <h3>實際操作畫面：同一張圖卡，兩家各做一次局部修改</h3>
+    <p style="margin-top:0">講師帳號實測（2026 年 11 月，衛教圖卡範例），點圖可放大。重點看「局部修改」後其他地方有沒有被動到。</p>
+    <div class="tabs">
+      <button class="tab on" data-g="imgg" data-t="imgg-gpt"><span class="t gpt">ChatGPT</span></button>
+      <button class="tab" data-g="imgg" data-t="imgg-ge"><span class="t ge">Gemini</span></button>
+    </div>
+    <div class="panel on" data-g="imgg" id="imgg-gpt"><div class="shots">
+      <figure class="shot"><a href="https://mattsue1003.github.io/q12345/img/l2-s8-gpt-editor.jpg" target="_blank" rel="noopener"><img src="https://mattsue1003.github.io/q12345/img/l2-s8-gpt-editor.jpg" alt="ChatGPT 圖片編輯器" loading="lazy"></a><figcaption><b class="n">1</b>生成後點圖片打開編輯器。下方工具列：標註、留言、移除背景、擦除、調整大小。</figcaption></figure>
+      <figure class="shot"><a href="https://mattsue1003.github.io/q12345/img/l2-s8-gpt-comment.jpg" target="_blank" rel="noopener"><img src="https://mattsue1003.github.io/q12345/img/l2-s8-gpt-comment.jpg" alt="ChatGPT 在圖上留言" loading="lazy"></a><figcaption><b class="n">2</b>選「留言」，點在要改的圖示上，打「把這裡換成一片吐司和一杯牛奶」，傳送。</figcaption></figure>
+      <figure class="shot"><a href="https://mattsue1003.github.io/q12345/img/l2-s8-gpt-after.jpg" target="_blank" rel="noopener"><img src="https://mattsue1003.github.io/q12345/img/l2-s8-gpt-after.jpg" alt="ChatGPT 局部修改結果" loading="lazy"></a><figcaption><b class="n">3</b>約 1 分鐘後：只有那一格換掉，文字與其他步驟都沒動。左上角可切換新舊版本。</figcaption></figure>
+    </div></div>
+    <div class="panel" data-g="imgg" id="imgg-ge"><div class="shots">
+      <figure class="shot"><a href="https://mattsue1003.github.io/q12345/img/l2-s8-ge-input.jpg" target="_blank" rel="noopener"><img src="https://mattsue1003.github.io/q12345/img/l2-s8-ge-input.jpg" alt="Gemini 建立圖像" loading="lazy"></a><figcaption><b class="n">1</b>「＋」→「建立圖像」，輸入框出現「圖片」標籤，可選直式、橫式與格式。</figcaption></figure>
+      <figure class="shot"><a href="https://mattsue1003.github.io/q12345/img/l2-s8-ge-before.jpg" target="_blank" rel="noopener"><img src="https://mattsue1003.github.io/q12345/img/l2-s8-ge-before.jpg" alt="Gemini 第一版" loading="lazy"></a><figcaption><b class="n">2</b>第一版：版面與中文字都不錯，還自己加了一句提醒。</figcaption></figure>
+      <figure class="shot"><a href="https://mattsue1003.github.io/q12345/img/l2-s8-ge-after.jpg" target="_blank" rel="noopener"><img src="https://mattsue1003.github.io/q12345/img/l2-s8-ge-after.jpg" alt="Gemini 修改後" loading="lazy"></a><figcaption><b class="n">3</b>說「只把標題底色改深綠」。結果整張底色都變了，還出現錯字。<b>這就是為什麼每次修改後都要逐字核對。</b></figcaption></figure>
+    </div></div>
+  </div>
+
+  <div class="card">
+    <h3>五種常用的生圖教案，提示語直接複製</h3>
+    <p style="margin-top:0">共同規則：<b>圖中不要有文字</b>（字另外用 Canva 或簡報加，才不會錯字）、指定「亞洲成人」、扁平插畫風、同一組同樣配色、先生第 1 張確認風格再生全套。</p>
+    <div class="grid2">
+      <div class="prompt" style="margin:0"><span class="label">① 順序卡（生活自理／工作步驟）</span>請生成一組 6 張「泡一杯茶包」的順序圖卡：每張只畫一個步驟（拿杯子、放茶包、倒熱水、等待、取出茶包、喝），扁平插畫風、亞洲中年男性、淺米色背景、圖中不要有任何文字與數字。先給第 1 張讓我確認風格，確認後再做其他 5 張，風格與人物要完全一樣。</div>
+      <div class="prompt" style="margin:0"><span class="label">② 情緒辨識卡</span>請生成 8 張情緒臉部表情卡：開心、難過、生氣、害怕、驚訝、厭惡、平靜、疲倦。同一位亞洲成人、正面半身、素色背景、表情清楚但不誇張、扁平插畫風、無文字。每張 1:1。</div>
+      <div class="prompt" style="margin:0"><span class="label">③ 找不同</span>請生成一張「廚房一角」的扁平插畫，物件清楚、不要太擁擠（約 10 個物件）。做好後，請用編輯功能做出第二版：只改動其中 5 個地方（例如杯子顏色、少一顆蘋果），其他完全不動，並另外列出這 5 處差異給我。</div>
+      <div class="prompt" style="margin:0"><span class="label">④ 著色線稿</span>請生成一張 A4 直式的黑白線稿著色圖，主題「廟口夜市」，線條粗、區塊大、不要細小花紋，適合手部震顫的成人著色；畫面裡不要有文字。</div>
+      <div class="prompt" style="margin:0;grid-column:1/-1"><span class="label">⑤ 懷舊情境圖（現實導向／懷舊團體）</span>請生成一張 1970 年代台灣柑仔店門口的插畫：木製櫃台、玻璃糖果罐、腳踏車、老式招牌（招牌上不要有可辨識的文字）。溫暖的午後光線、寫實但柔和的插畫風、16:9。這張要拿來做團體討論的開場圖，請讓畫面裡有 5 個可以拿來問「你還記得嗎」的物件。</div>
+    </div>
+    <div class="note red" style="margin:12px 0 0"><b>版權與肖像：</b>不要上傳病人照片或院內同仁照片當參考圖；要「像某位名人」或「像某個卡通」的要求不要做。AI 生成圖用在院內教案沒問題，對外出版或販售要另外確認平台條款。</div>
+  </div>
+</section>
+
+<section id="slides">
+  <div class="sec-head"><div class="num">7</div><div><h2>AI 生簡報：Gemini 用「任務」、ChatGPT 用「工作」，再用 Canva 修</h2><p>同一個教案主題，用的「模式」不同，做出來的簡報差很多。先選對模式，再補圖，最後用 Canva 魔法圖層或 DeckEdit 微調。</p></div></div>
+
+  <div class="card" id="taskvschat">
+    <h3>先回答最常被問的問題：Gemini 到底要用「任務」還是「對話」？</h3>
+    <div class="decide">
+      <div><h4>用「對話」就好</h4><ul>
+        <li>問問題、要建議、討論教案方向</li>
+        <li>要一段文字：帶領稿、家屬說明、一封信</li>
+        <li>改寫、翻譯、摘要一小段內容</li>
+        <li>生成單張圖片（「建立圖像」）</li>
+      </ul><p style="margin:8px 0 0;color:var(--muted)">特徵：一來一回、看完就好、不需要反覆修同一個東西。</p></div>
+      <div class="pick"><h4>要用「任務」（Canvas）</h4><ul>
+        <li>要做出<b>一個成品</b>：簡報、網頁遊戲、學習單生成器、文件</li>
+        <li>做完還要<b>反覆改</b>：「第 4 頁換圖」「按鈕大一點」</li>
+        <li>要<b>預覽</b>：網頁要能點、簡報要能翻</li>
+        <li>要<b>匯出或分享</b>：匯出成 Google 簡報、文件，或產生公開網址</li>
+      </ul><p style="margin:8px 0 0;color:var(--muted)">特徵：多步驟、會停下來等你確認、成品留在右側面板裡持續修改。</p></div>
+    </div>
+    <div class="note teal" style="margin:12px 0 0"><b>一句話記：</b>「要拿走一個東西，就開任務；只是要知道答案，用對話。」在對話裡做簡報常常只給大綱或做到一半停，這不是你提示語寫錯，是模式選錯。開了任務之後，也可以把 Gemini Notebook（NotebookLM）的資料用 <kbd>@Gemini Notebook</kbd> 帶進來，內容就只會來自你的資料。</div>
+  </div>
+
+  <div class="card">
+    <h3><span class="pill">Gemini</span>不要在「對話」裡做，開「任務」再做</h3>
+    <div class="grid2">
+      <div>
+        <h4>為什麼要用「任務」</h4>
+        <ul>
+          <li>對話模式一次只回一輪，做簡報常常只給大綱或做到一半就停。</li>
+          <li><b>任務</b>會把「規劃 → 寫內容 → 排版 → 配圖」拆成多步驟自己跑完，做出來的版面精緻，會自動產生示意圖。</li>
+          <li>做好後右上角可「匯出成簡報」到 Google 雲端硬碟，用 Google 簡報繼續改。</li>
+        </ul>
+        <h4 style="margin-top:14px">操作步驟</h4>
+        <ol class="steps">
+          <li>Gemini 對話框 → 工具 → 開啟<b>任務</b>（部分版本顯示為 Canvas）。</li>
+          <li>先把教案素材整理進 <b>Gemini Notebook</b>（NotebookLM）：上傳活動流程、科內既有教案 PDF、參考文章。</li>
+          <li>在任務裡輸入 <kbd>@Gemini Notebook</kbd>，選到那本筆記本，再說「根據這本筆記本做 10 頁帶團體用的簡報」。這樣內容只會來自你的資料，不會亂編。</li>
+          <li>看預覽，直接說「第 4 頁換成大家圍桌做手工藝的圖」「整體改成暖色」。</li>
+          <li>滿意後「匯出成簡報」。</li>
+        </ol>
+      </div>
+      <div>
+        <h4>Gemini Notebook 自己也能做簡報，但⋯</h4>
+        <div class="note" style="margin-top:0">
+          <ul style="margin:0">
+            <li>NotebookLM 裡按「簡報」也能直接產出，速度快、內容忠於資料。</li>
+            <li>缺點是<b>文字呈現有時不清楚</b>：字太小、一頁塞太多、標題和內文分不開。</li>
+            <li>要改只能再下提示詞請 AI 重做，一來一回很花時間；要精修版面，不如回到任務模式，或匯出後用 Canva、DeckEdit 改（見下方）。</li>
+          </ul>
+        </div>
+        <h4 style="margin-top:14px">兩條路怎麼選</h4>
+        <div class="tbl">
+          <table style="min-width:0">
+            <thead><tr><th></th><th>任務 + @Notebook</th><th>Notebook 直接做</th></tr></thead>
+            <tbody>
+              <tr><td>版面</td><td>精緻、會配圖</td><td>陽春、文字常擠</td></tr>
+              <tr><td>內容來源</td><td>筆記本資料</td><td>筆記本資料</td></tr>
+              <tr><td>修改</td><td>說一句就改</td><td>要重新下提示詞重做</td></tr>
+              <tr><td>適合</td><td>帶團體、科內研習、對外教材</td><td>快速看資料能做成什麼</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="pill o">ChatGPT</span>用「工作」模式，不要用一般對話；要圖就用生圖</h3>
+    <div class="grid2">
+      <div>
+        <h4>為什麼要用「工作」（Projects／Tasks）</h4>
+        <ul>
+          <li>一般對話做簡報，流程長一點就容易中途斷掉，或只給你文字版。</li>
+          <li><b>工作</b>模式跑的流程比較長，可以多步驟進行：先大綱、再逐頁、再生圖、最後打包成 PPTX，中間比較不會中斷。</li>
+          <li>專案裡的指示會一直記得（對象、色系、字級），下次做同系列簡報不用重講。</li>
+        </ul>
+        <h4 style="margin-top:14px">操作步驟</h4>
+        <ol class="steps">
+          <li>側欄「工作」→ 新增專案，把教案流程、科內簡報模板丟進去，在專案指示寫對象與版面規則。</li>
+          <li>說「先列 8 頁大綱表格給我確認」。</li>
+          <li>確認後說「逐頁產出，並<b>每頁生成一張插圖</b>」。</li>
+          <li>最後說「打包成 PPTX 給我下載」。</li>
+        </ol>
+      </div>
+      <div>
+        <h4>「大字流」vs「大圖流」</h4>
+        <div class="grid2" style="gap:12px">
+          <div class="b3"><span class="pill a">只下簡報提示詞</span><h4 style="margin-top:8px">大字流</h4><p style="margin:0">標題＋條列、滿版文字，像講稿不像簡報；注意力短的個案看兩頁就放空。</p></div>
+          <div class="b3" style="border-color:var(--orange)"><span class="pill o">加上生圖</span><h4 style="margin-top:8px">大圖流</h4><p style="margin:0">一頁一張圖、一句話，看圖就懂；適合活動室投影、病房公布欄輪播。</p></div>
+        </div>
+        <div class="note" style="margin:12px 0 0"><b>生圖要在提示語裡明講：</b>「第 3 頁生成一張插圖：四位成人圍桌一起撕色紙貼畫，扁平插畫風、亞洲成人、無文字」。沒有這句，ChatGPT 就只給文字。教案圖一律指定<b>無文字</b>，避免 AI 在圖裡亂寫字。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="canva">
+    <h3><span class="pill">修圖與修字</span>AI 做好的簡報與圖卡，用 Canva 魔法圖層和 DeckEdit 再修</h3>
+    <p>AI 產出的簡報與圖卡常見兩個問題：圖裡有錯字、或整頁是一張圖改不了字。這兩個工具各解一個。魔法圖層對生圖教案特別有用：AI 生的情境圖卡把人物拆成一層，就能換背景、移位置、做成貼紙。</p>
+    <div class="grid2">
+      <div class="b3">
+        <h4>Canva 魔法圖層（Magic Layers）</h4>
+        <p>把一張「整片是圖」的投影片，自動拆成背景、人物、文字等圖層，每一層都能單獨搬動、刪除、改字。</p>
+        <ol class="steps">
+          <li>把 AI 做好的簡報<b>匯出成圖片或 PDF</b>（PowerPoint：另存為 PNG；Gemini／NotebookLM：下載 PDF）。</li>
+          <li>開 Canva → 建立簡報 → 上傳這些圖片放到各頁。</li>
+          <li>選取圖片 → 編輯圖片 → <b>Magic Layers</b>，等它拆層。</li>
+          <li>點錯字的那一層刪掉，用 Canva 文字方塊重打；想換的插圖直接刪層再放新的。</li>
+          <li><b>教案延伸：</b>把 ChatGPT 生的情境圖拆層後，只留「人物」那一層，複製到新頁面排成一組情緒卡或順序卡，背景統一、大小一致。</li>
+        </ol>
+        <div class="note" style="margin:10px 0 0;font-size:.95rem">提醒：目前一次只能處理一張圖；介面是中文時若找不到按鈕，先把 Canva 語言切成英文。免費版有每月額度，大量使用需 Pro。字太小、低對比的圖拆層容易缺字。</div>
+      </div>
+      <div class="b3">
+        <h4>DeckEdit：免費、在瀏覽器裡把簡報的字變成可辨識、可編輯</h4>
+        <p>開啟 PDF 或圖片格式的簡報，用<b>文字辨識（OCR）</b>把每頁的文字框抓出來，直接點、改、換字體，再匯出成可編輯的 PPTX。全程在你的瀏覽器執行，不上傳、不用註冊，有繁體中文介面。</p>
+        <a class="btn" href="https://deckedit.com/zh-Hant" target="_blank" rel="noopener" style="margin:4px 0 10px">打開 DeckEdit（繁體中文）</a>
+        <ol class="steps">
+          <li>打開 <a href="https://deckedit.com/zh-Hant" target="_blank" rel="noopener">deckedit.com/zh-Hant</a>。</li>
+          <li>拖入簡報檔：NotebookLM／Gemini 匯出的 PDF、ChatGPT 生的整頁圖片，或 <b>Canva 做好的簡報</b>（Canva：分享 → 下載 → PDF 標準）。</li>
+          <li>等它辨識完，每頁的文字會變成可以點選的文字框；點任何一段就能改字、調大、換字體。</li>
+          <li>改完匯出 PPTX，之後在 PowerPoint 或 Google 簡報繼續用。</li>
+        </ol>
+        <div class="note teal" style="margin:10px 0 0;font-size:.95rem">兩個最常用的情境：① NotebookLM 做的簡報「字擠在一起」→ 匯出 PDF → DeckEdit 改字、調大 → 存成 PPTX，比重新下提示詞快很多。② Canva 的簡報要交給同事用 PowerPoint 改 → 下載 PDF → DeckEdit 辨識 → 匯出 PPTX，文字都還能編輯。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tbl" style="margin-top:4px">
+    <table>
+      <thead><tr><th></th><th>Gemini 任務 + @Notebook</th><th>ChatGPT 工作 + 生圖</th></tr></thead>
+      <tbody>
+        <tr><td>要用的模式</td><td>任務（不是對話）</td><td>工作／專案（不是對話）</td></tr>
+        <tr><td>內容來源</td><td>@Gemini Notebook 的筆記本</td><td>專案裡的檔案與指示</td></tr>
+        <tr><td>圖片</td><td>自動配示意圖，可指定換</td><td>要逐頁說「生成插圖」才有</td></tr>
+        <tr><td>輸出</td><td>匯出 Google 簡報</td><td>PPTX 下載</td></tr>
+        <tr><td>後製</td><td colspan="2">匯出圖片／PDF → Canva 魔法圖層改圖、DeckEdit 把文字辨識成可編輯再改字</td></tr>
+        <tr><td>共同原則</td><td colspan="2">內容先去識別化；活動步驟、安全提醒一律人工覆核；院內規範優先。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prompt"><span class="label">範本：Gemini 任務 + @Gemini Notebook</span>@Gemini Notebook（選「職能治療團體教案」筆記本）
+請根據這本筆記本的內容，做一份 10 頁、在日間病房活動室投影用的「撕貼畫：我的家鄉」團體簡報：
+- 一頁一個步驟，字大、留白多，不用英文縮寫
+- 每頁配一張扁平插畫風的示意圖，亞洲成人，圖中不要有文字
+- 只用筆記本裡的步驟與材料，不新增我沒說的活動
+- 第 2 頁是「今天的規則」（最多 3 條），最後一頁是「分享時間：三個問題」<button class="copy">複製</button></div>
+  <div class="prompt"><span class="label">範本：ChatGPT 工作模式（專案指示）</span>你是精神科資深職能治療師，這個專案所有簡報都是帶成人團體用的投影片，對象是急性病房與日間病房的個案。
+規則：標題 36pt 以上、內文 24pt 以上；一頁只講一件事；規則最多 3 條；不用英文縮寫；色系溫和的綠與米白、淺色背景；不用兒童風格的圖。
+做簡報的流程固定為：① 先用表格列出每頁的頁碼、標題、核心訊息、建議畫面，等我確認 → ② 逐頁產出，每頁生成一張扁平插畫風、亞洲成人、無文字的插圖 → ③ 打包成 PPTX 並附逐頁 30 秒帶領稿。
+材料不能有剪刀、牙籤、繩子與可吞食小物；不新增我給的資料以外的活動；不確定的地方用【？】標出。<button class="copy">複製</button></div>
+</section>
+
+<!-- 6 three no -->
+
+<!-- code -->
+<section id="code">
+  <div class="sec-head"><div class="num">8</div><div><h2>寫程式：讓 Gemini、ChatGPT、Claude 做出網頁遊戲、紙本生成器與教案資料庫</h2><p>你不需要看懂程式碼。你要會的是：講清楚要什麼、在哪裡預覽、怎麼存成一個檔案、怎麼放上網。</p></div></div>
+
+  <div class="card">
+    <h3>先搞懂一件事：我們做的都是「單一檔案的 HTML」</h3>
+    <div class="grid3">
+      <div class="b3"><h4>它是什麼</h4><p style="margin:0">一個副檔名 <code>.html</code> 的檔案，用瀏覽器打開就是一個網頁，可以有按鈕、聲音、計分、列印。這份講義、金曲猜歌、教案實例庫裡的 65 個教案都是這種檔案。</p></div>
+      <div class="b3"><h4>為什麼只要一個檔案</h4><p style="margin:0">一個檔案最好存、最好上傳、最不會壞。所以提示語一定要說「單一檔案、所有程式與樣式寫在同一個檔案裡、不要用外部圖片」。</p></div>
+      <div class="b3"><h4>做好以後</h4><p style="margin:0">雙擊檔案就能在自己電腦用；要給病人在平板上玩、給同事用，就<a href="#share">用 Gemini 分享</a>或<a href="#gh">上傳 GitHub</a> 拿到一個網址。</p></div>
+    </div>
+  </div>
+
+  <div class="tri">
+    <div class="card ge-c"><h3><span class="t ge">Gemini</span>在「任務」（Canvas）裡寫，右邊直接預覽</h3>
+      <ul><li>對話框 → 工具 → <b>任務</b>（部分版本叫 Canvas），再貼提示語。<b>不要在一般對話裡做</b>，一般對話只會給你一段程式碼、常常做到一半停。</li><li>右側會出現「預覽」，可以直接點按鈕試玩；改東西就說「按鈕再大一點」「加上音效開關」。</li><li>做好後右上「分享」可以直接產生公開網址（見 <a href="#share">Gemini 分享</a>），也可以「下載」存成 .html。</li></ul></div>
+    <div class="card gpt-c"><h3><span class="t gpt">ChatGPT</span>用「畫布」（Canvas），預覽要按一下</h3>
+      <ul><li>對話框「＋」→「畫布」，或直接說「請用 Canvas 做」。</li><li>程式碼會出現在右側；上方有「預覽」可以切換看網頁長怎樣。</li><li>存檔：右上「⋯」→ 下載，或複製全部貼到記事本存成 <code>index.html</code>。也可以直接說「給我可下載的 index.html」。</li></ul></div>
+    <div class="card cl-c"><h3><span class="t cl">Claude</span>Artifacts 自動開，最適合第一次做</h3>
+      <ul><li>只要提示語裡有「做一個網頁」，右側就會自動出現做好的網頁，<b>不用切換任何模式</b>。</li><li>可以邊玩邊改，改完的版本會留下來，可以回到上一版。</li><li>右上「下載」直接拿到 .html；也可以「發布」成 Claude 的公開連結。免費帳號額度用得比較快，複雜的遊戲建議一次講清楚再送出。</li></ul></div>
+  </div>
+  <div class="note" style="margin-top:0"><b>同一個題目三家都試：</b>免費帳號額度有限，建議今天先用 Claude 或 Gemini 做第一版（預覽最直覺），額度用完換另一家接著做，把程式碼貼過去說「請繼續改這個檔案」就能無縫接手。都用完了還有 <a href="#oc">OpenCode 的免費模型</a>。</div>
+
+  <div class="card">
+    <h3>三種最常做的教案網頁，提示語直接用</h3>
+    <div class="prompt"><span class="label">① 網頁遊戲：平板上玩的配對／反應遊戲</span>請做一個單一檔案的 HTML 網頁遊戲「水果配對」，給精神科日間病房的成人個案在平板上玩：
+- 4×4 共 16 張牌（8 對），牌面用 Emoji 水果，不要用外部圖片
+- 按鈕與牌都要大（至少 80px），顏色對比高，字級 24px 以上
+- 有「重新開始」、難度切換（3×2、4×4、6×4）、音效開關、翻牌次數與用時顯示
+- 完成時顯示鼓勵語，不要有倒數計時的壓迫感
+- 所有程式與樣式寫在同一個檔案裡，手機直式也要能玩
+做好後告訴我怎麼存成 index.html、怎麼用手機打開。</div>
+    <div class="prompt"><span class="label">② 紙本生成器：按一下就產生可列印的學習單</span>請做一個單一檔案的 HTML「連連看學習單生成器」：
+- 左邊是設定面板：點數（10／20／30）、圖形（圓形、星形、簡單動物輪廓）、字級、是否顯示數字提示
+- 右邊即時預覽一張 A4 直式學習單，點「列印」只印學習單、不印設定面板（用 @media print）
+- 每次按「重新產生」會換一張不同的題目
+- 字級至少 18pt、線條粗，適合手部震顫與視力退化的成人
+- 全部寫在同一個檔案，不用外部程式庫
+做好後說明怎麼存檔、怎麼列印成 PDF。</div>
+    <div class="prompt"><span class="label">③ 教案資料庫：可搜尋、可篩選、可一直加資料</span>請做一個單一檔案的 HTML「職能治療團體教案資料庫」網頁：
+- 資料放在檔案最上方的一個 JavaScript 陣列裡，每筆有：名稱、類型（紙本／動畫／遊戲／藝術／其他）、適用對象、人數、時間、材料、目標、步驟（可多行）、注意事項、連結
+- 先放 6 筆合成的範例資料，欄位要填滿，讓我知道格式
+- 畫面上方有搜尋框（搜名稱、材料、目標）與類型、對象的篩選按鈕；下方是卡片列表，點卡片展開完整步驟
+- 有「匯出 CSV」與「列印這一筆」按鈕
+- 手機也要好看；字級 18px 以上
+- 最後請用注解教我「以後怎麼自己加一筆資料」，我不會寫程式</div>
+    <div class="grid2" style="margin-top:12px">
+      <div class="b3"><h4>資料庫要常常更新怎麼辦？</h4><p style="margin:0">跟 AI 說「資料改成從 Google 試算表讀取」：把試算表「檔案 → 共用 → 發布到網路」成 CSV，網頁啟動時去讀。以後只要改試算表，不用再上傳檔案。缺點是試算表內容會公開，<b>只能放教案，不能放病人資料</b>。</p></div>
+      <div class="b3"><h4>要加資料但不想碰程式？</h4><p style="margin:0">把 HTML 檔整個貼回 AI，說「幫我加入這三筆資料」，再把新檔案存起來覆蓋。或用 <a href="#oc">OpenCode</a> 打開資料夾，直接說「在資料庫裡加一筆『報紙球投籃』」。</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>查資料不用開十個分頁：Chrome 裡的 Gemini 側邊欄</h3>
+    <p style="margin-top:0">做教案最花時間的是找素材：老歌年代、節慶習俗、某個活動的研究依據。用 <a href="#chrome">Chrome 裡的 Gemini</a>，打開網頁後在側邊欄直接問，不用複製貼上。</p>
+    <div class="grid3">
+      <div class="b3"><h4>摘要一頁</h4><p style="margin:0">打開一篇活動設計文章：「用 5 點整理這篇活動的步驟與材料，標出哪些步驟需要剪刀。」</p></div>
+      <div class="b3"><h4>多分頁比較</h4><p style="margin:0">開 3 個網頁的懷舊團體方案，在輸入框按「＋」加入分頁：「做成比較表：對象、時間、材料、需要的帶領人數。」</p></div>
+      <div class="b3"><h4>直接變成教案素材</h4><p style="margin:0">「把這頁 1970 年代的台灣生活用品整理成 20 個名詞，每個附一句可以問長輩的問題。」複製貼進你的教案提示語。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- html -->
+<section id="html">
+  <div class="sec-head"><div class="num">9</div><div><h2>HTML 簡報：一個網址就能在活動室投影，按鈕都能點</h2><p>和 PowerPoint 的差別：不用帶檔案、任何電腦手機打開都一樣、投影片裡可以直接放遊戲、影片、計時器。講師的演講與課程簡報現在都是這樣做的。</p></div></div>
+  <div class="grid3">
+    <div class="b3"><h4>什麼時候用 HTML 簡報</h4><p style="margin:0">帶團體要「邊講邊互動」：點一下出題、點一下計分、放一段影片、開一個計時器。或是要分享給別的單位、不想寄 50MB 的檔案。</p></div>
+    <div class="b3"><h4>什麼時候還是用 PowerPoint</h4><p style="margin:0">院內正式會議、要走公文流程、要印講義的場合。可以兩邊並行：HTML 給現場互動，PPT 給存檔。</p></div>
+    <div class="b3"><h4>先看三個例子</h4><p style="margin:0"><a href="https://mattsue1003.github.io/ai-care-database-talk/" target="_blank" rel="noopener">演講簡報</a>、<a href="https://mattsue1003.github.io/eden-disability-prevention/" target="_blank" rel="noopener">研習簡報＋講義</a>、<a href="https://mattsue1003.github.io/animation-teaching-fall-prevention/" target="_blank" rel="noopener">影片教學法互動簡報</a>。用 ← → 鍵或滑手機翻頁。</p></div>
+  </div>
+  <div class="card">
+    <h3>HTML 簡報提示語（三家通用，Claude 與 Gemini 任務會直接預覽）</h3>
+    <div class="prompt"><span class="label">HTML 簡報範本</span>請做一份單一檔案的 HTML 簡報，主題「（例：居家安全檢核：浴室篇）」，給（例：日間病房 10 位成人個案與 2 位家屬）在活動室投影使用。
+結構：共 12 頁。第 1 頁封面（標題、單位、日期）、第 2 頁今天的三個問題、第 3–10 頁每頁一個重點：一句話標題＋一張示意圖位置（先用色塊與 Emoji 代替）＋帶領者的一句提問、第 11 頁互動：4 題是非題，點選後顯示對錯與一句說明、第 12 頁回顧與下次預告。
+操作：鍵盤 ← → 與空白鍵翻頁、手機左右滑動翻頁、按 F 全螢幕、右下角顯示頁碼、按 T 顯示目錄可跳頁。
+視覺：16:9，字級最小 28px、標題 48px 以上，深色字淺色底，高對比；配色用溫和的綠與米白；不要動畫特效。
+技術：所有 CSS 與 JavaScript 寫在同一個檔案，不用外部程式庫與外部圖片；手機直式打開也要能看。
+做好後告訴我：怎麼存成 slides.html、怎麼換成我自己的圖片。</div>
+    <ol class="steps" style="margin-top:12px">
+      <li>先用上面的範本做出骨架，確認翻頁與全螢幕正常。</li>
+      <li>再一頁一頁補內容：「第 5 頁改成：標題『防滑墊要這樣放』，提問『你家浴室地板是什麼材質？』」。</li>
+      <li>要圖就去<a href="#img">生圖</a>：把圖存到同一個資料夾，跟 AI 說「第 5 頁的圖換成 img/bath.png」。只有一個檔案時也可以請它「把圖片內嵌進檔案」。</li>
+      <li>要放影片：「第 7 頁嵌入這個 YouTube 連結，只播 0:30 到 1:10」。</li>
+      <li>存成 <code>slides.html</code>，<a href="#gh">上傳到 GitHub</a>，網址就是 <code>你的username.github.io/slides.html</code>。</li>
+    </ol>
+    <div class="note teal" style="margin:12px 0 0"><b>講稿也一起做：</b>最後加一句「請另外給我每一頁 30 秒的帶領稿，含一個觀察重點」，貼進手機備忘錄，帶團體時看手機就好。</div>
+  </div>
+</section>
+
+<!-- share -->
+<section id="share">
+  <div class="sec-head"><div class="num" style="background:#1A73E8">G</div><div><h2>Gemini 一鍵上架：做好的網頁直接分享成公開網址</h2><p>不用註冊任何東西，是今天最快拿到網址的方法。但它有幾個限制，正式要長期用的教案還是放 GitHub。</p></div></div>
+  <div class="grid2">
+    <div class="card" style="margin:0">
+      <h3>怎麼做（Gemini 網頁版）</h3>
+      <ol class="steps">
+        <li>在「任務」（Canvas）裡把網頁或簡報做好，預覽確認可以用。</li>
+        <li>點 Canvas 面板右上角的「<b>分享和匯出</b>」→「<b>分享</b>」。</li>
+        <li>建立公開連結，會得到一個 <code>g.co/gemini/share/…</code> 開頭的網址，複製。</li>
+        <li>用手機打開試一次；傳到 LINE 群組或做成 QR code，病人與同事點開就能用，<b>不需要 Google 帳號</b>。</li>
+      </ol>
+    </div>
+    <div class="card" style="margin:0">
+      <h3>限制，先知道再用</h3>
+      <ul>
+        <li><b>連結跟著對話走：</b>刪掉那個對話、或 Gemini 活動紀錄自動刪除到期，連結就失效。長期要用的教案請另外存 .html。</li>
+        <li><b>只能在網頁版打開：</b>連結在手機瀏覽器可以開，在 Gemini 手機 App 裡不行。</li>
+        <li><b>資料是公開的：</b>有連結的人都能看，若網頁裡有可輸入的資料，別人也看得到。只放教案，不放任何病人資料。</li>
+        <li><b>公務 Workspace 帳號可能關閉分享：</b>看不到「分享」就是管理者沒開，改用個人帳號或 GitHub。</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tbl" style="margin-top:14px"><table>
+    <thead><tr><th></th><th>Gemini 分享連結</th><th>Claude 發布</th><th>GitHub Pages（下一節）</th></tr></thead>
+    <tbody>
+      <tr><td>要花的時間</td><td>10 秒</td><td>10 秒</td><td>第一次 20 分鐘，之後 2 分鐘</td></tr>
+      <tr><td>網址長相</td><td>g.co/gemini/share/隨機碼</td><td>claude.site／claude.ai 隨機碼</td><td>你的名字.github.io/教案名</td></tr>
+      <tr><td>能活多久</td><td>對話還在就在</td><td>帳號還在就在</td><td>永久，自己掌控</td></tr>
+      <tr><td>之後要改</td><td>在同一個對話改，連結不變</td><td>重新發布</td><td>重新上傳同名檔案覆蓋</td></tr>
+      <tr><td>適合</td><td>今天課堂、下週的一場團體</td><td>快速給同事看</td><td>科內常用教案、對外分享、累積成作品集</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="gh">
+  <div class="sec-head"><div class="num" style="background:#24292F">10</div><div><h2>課堂實作：註冊 GitHub，把你的教案網頁上傳成一個永久網址</h2><p>今天在課堂上一起做完：註冊、上傳、用手機打開。前面做好的網頁遊戲、紙本生成器、HTML 簡報，全部用同一套流程。</p></div></div>
+  <div class="grid3">
+    <div class="b3"><h4>GitHub 是什麼？</h4><p style="margin:0">全世界工程師放檔案的雲端倉庫。我們只用它其中一個免費功能：<b>GitHub Pages</b>，把 HTML 檔變成一個公開網址。</p></div>
+    <div class="b3"><h4>為什麼要學？</h4><p style="margin:0">AI 做出來的網頁遊戲、簡報、紙本生成器都是 HTML 檔。放上 GitHub Pages，用手機、LINE 分享一個連結就能打開，不用寄檔案。這份講義和教案實例庫的每一個教案，都是這樣放上網的。</p></div>
+    <div class="b3"><h4>要花錢嗎？</h4><p style="margin:0">不用。免費帳號就能做公開網頁，不需要信用卡。要準備的只有一個 Email 和 20 分鐘。</p></div>
+  </div>
+
+  <div class="card">
+    <h3>步驟一：註冊 GitHub（5 分鐘）</h3>
+    <ol class="steps">
+      <li>打開 <a href="https://github.com/signup" target="_blank" rel="noopener">github.com/signup</a></li>
+      <li>輸入 Email、設定密碼</li>
+      <li>設定 <b>Username（使用者名稱）</b>：這會變成你的網址，例如 username 是 <code>typc-ot-amy</code>，網址就是 <code>typc-ot-amy.github.io</code>。只能用英文小寫、數字、減號，取好記、專業一點的</li>
+      <li>完成真人驗證，到信箱收 GitHub 寄來的驗證碼，貼回網頁</li>
+      <li>選方案時選 <b>Free</b>；問卷可以直接略過</li>
+      <li>建議到右上頭像 →「Settings」→「Password and authentication」開啟兩步驟驗證</li>
+    </ol>
+    <div class="note" style="margin-bottom:0"><b>名字想清楚再取：</b>username 之後可以改，但網址會跟著變、舊連結會失效。不要用身分證字號、生日這類個資當名字。</div>
+  </div>
+
+  <div class="card">
+    <h3>步驟二：準備要上傳的檔案（已經做好教案網頁的，直接跳到步驟三）</h3>
+    <p style="margin-top:0">還沒有檔案的同仁，先用 5 分鐘請 AI 做一個自我介紹網頁當第一個作品。三個工具都可以：Claude 會直接在右側顯示做好的網頁，最方便預覽；ChatGPT 用畫布、Gemini 用任務也能預覽。</p>
+    <div class="prompt"><span class="label">個人網頁提示詞（改成你自己的資料）</span>請幫我做一個單一檔案的 HTML 自我介紹網頁，檔名 index.html，所有 CSS 寫在同一個檔案裡，不要用外部圖片。
+我的資料：
+- 稱呼：（例如 王治療師、Amy）
+- 單位：衛生福利部桃園療養院 職能治療科
+- 職稱與證照：（例如 職能治療師）
+- 擅長的團體與活動：（例如 手工藝團體、認知訓練、社交技巧團體）
+- 一句話介紹：（例如 讓每一位個案在活動裡找到做得到的事）
+- 聯絡方式：（只放公務信箱，或寫「請洽職能治療科」）
+設計要求：
+1. 手機打開也好讀，字大、行距寬
+2. 配色溫和，用淺綠或米白
+3. 用文字或圖示代替照片
+4. 最下方放「本頁使用 AI 協助製作」
+做好後請告訴我怎麼存成 index.html。</div>
+    <div class="grid3" style="margin-top:12px">
+      <div class="card cl-c" style="margin:0"><h3><span class="t cl">Claude</span>存檔</h3><p style="margin:0">右側網頁上方按「下載」，或點「程式碼」分頁全選複製。檔名改成 <code>index.html</code>。</p></div>
+      <div class="card gpt-c" style="margin:0"><h3><span class="t gpt">ChatGPT</span>存檔</h3><p style="margin:0">程式碼方框右上「複製」，貼到記事本，存成 <code>index.html</code>。也可以請它「直接給我下載檔案」。</p></div>
+      <div class="card ge-c" style="margin:0"><h3><span class="t ge">Gemini</span>存檔</h3><p style="margin:0">用「任務」做可以直接預覽網頁；右上角「下載」或從程式碼複製貼到記事本，存成 <code>index.html</code>。</p></div>
+    </div>
+    <div class="note" style="margin:12px 0 0"><b>存檔陷阱：</b>Windows 要先打開「顯示副檔名」，不然會變成 index.html.txt。存好後雙擊檔案，瀏覽器打得開、看得到網頁，就成功了。</div>
+  </div>
+
+  <div class="card">
+    <h3>步驟三：上傳到 GitHub Pages（10 分鐘，全程用網頁，不用寫程式）</h3>
+    <ol class="steps">
+      <li>登入 GitHub，右上「＋」→「New repository」（新增倉庫）</li>
+      <li><b>Repository name</b> 一字不差填 <code>你的username.github.io</code>，例如 <code>typc-ot-amy.github.io</code>。這個特別的名字會讓 GitHub 自動把它變成網站</li>
+      <li>「Choose visibility」選 <b>Public</b>；「Add README」保持 <b>Off</b> → 按綠色「Create repository」</li>
+      <li>出現的頁面中間找到藍色小字「<b>uploading an existing file</b>」，點進去</li>
+      <li>把 <code>index.html</code> 拖進「Drag files here」框框 → 下方保持「Commit directly to the main branch」→ 按綠色「<b>Commit changes</b>」</li>
+      <li>等 1～2 分鐘，打開 <code>https://你的username.github.io</code>，看到你的網頁就完成了</li>
+      <li>沒出現？到倉庫上方「Settings」→ 左側「Pages」，確認 Source 是「Deploy from a branch」、Branch 是「main」→「/ (root)」，按 Save 再等 1 分鐘</li>
+    </ol>
+    <div class="grid2" style="margin-top:12px">
+      <div class="b3"><h4>之後要改內容</h4><p style="margin:0">回到 AI 說「把擅長主題加上『飲食衛教』」，存成新的 index.html，再照第 4、5 步上傳覆蓋即可。也可以在 GitHub 上點檔案 → 鉛筆圖示直接改字。</p></div>
+      <div class="b3"><h4>第二個、第三個教案怎麼放</h4><p style="margin:0">同一個倉庫可以放很多檔案：遊戲存成 <code>game.html</code>、簡報存成 <code>slides.html</code>，一樣拖進去上傳，網址就是 <code>你的username.github.io/game.html</code>。檔名只用英文小寫、數字與減號。</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>實際操作畫面（講師帳號，2026 年 11 月）</h3>
+    <p style="margin-top:0">示範時沒有真的建立倉庫或上傳檔案，點圖可放大。你的畫面上 mattsue1003 會換成你自己的 username。</p>
+    <div class="tabs">
+      <button class="tab on" data-g="ghg" data-t="ghg-1">建立倉庫</button>
+      <button class="tab" data-g="ghg" data-t="ghg-2">上傳檔案</button>
+      <button class="tab" data-g="ghg" data-t="ghg-3">確認上線</button>
+    </div>
+    <div class="panel on" data-g="ghg" id="ghg-1"><div class="shots">
+      <figure class="shot"><a href="https://mattsue1003.github.io/q12345/img/l2-gh-name.jpg" target="_blank" rel="noopener"><img src="https://mattsue1003.github.io/q12345/img/l2-gh-name.jpg" alt="GitHub 建立倉庫填名稱" loading="lazy"></a><figcaption><b class="n">1</b>Repository name 填「你的username.github.io」，出現綠色「is available」就代表可以用。</figcaption></figure>
+      <figure class="shot"><a href="https://mattsue1003.github.io/q12345/img/l2-gh-config.jpg" target="_blank" rel="noopener"><img src="https://mattsue1003.github.io/q12345/img/l2-gh-config.jpg" alt="GitHub 倉庫設定與建立按鈕" loading="lazy"></a><figcaption><b class="n">2</b>往下：visibility 選 Public、Add README 保持 Off，按右下綠色「Create repository」。</figcaption></figure>
+    </div></div>
+    <div class="panel" data-g="ghg" id="ghg-2"><div class="shots">
+      <figure class="shot"><a href="https://mattsue1003.github.io/q12345/img/l2-gh-upload.jpg" target="_blank" rel="noopener"><img src="https://mattsue1003.github.io/q12345/img/l2-gh-upload.jpg" alt="GitHub 上傳檔案頁面" loading="lazy"></a><figcaption><b class="n">1</b>點「uploading an existing file」進到這頁：把 index.html 拖進上方框框，選「Commit directly to the main branch」，按「Commit changes」。</figcaption></figure>
+    </div></div>
+    <div class="panel" data-g="ghg" id="ghg-3"><div class="shots">
+      <figure class="shot"><a href="https://mattsue1003.github.io/q12345/img/l2-gh-pages.jpg" target="_blank" rel="noopener"><img src="https://mattsue1003.github.io/q12345/img/l2-gh-pages.jpg" alt="GitHub Pages 設定頁" loading="lazy"></a><figcaption><b class="n">1</b>倉庫「Settings」→ 左側「Pages」：看到「Your site is live at …」就成功了。Source 是「Deploy from a branch」，Branch 是「main」與「/ (root)」。</figcaption></figure>
+    </div></div>
+  </div>
+  <div class="card oc-c">
+    <h3><span class="t oc">OpenCode</span>進階：讓代理幫你做網頁</h3>
+    <p style="margin-top:0">在練習資料夾開 <a href="#oc">OpenCode</a>，貼上教案提示詞，它會直接在資料夾裡建好 <code>index.html</code>，還能開瀏覽器給你看。上傳仍然用上面的網頁拖曳方式；讓代理直接推上 GitHub 需要額外設定登入，今天不教。</p>
+  </div>
+
+  <div class="note red"><b>公開網頁的界線：</b>GitHub Pages 是<b>全世界都看得到</b>的。不要放個人手機、住址、身分證字號、病人照片、病人作品照片或任何病人資料，也不要放院內未公開的文件。若要以醫院名義對外發布，請先確認院內對外資訊發布規定。</div>
+</section>
+
+
+
+<!-- oc -->
+<section id="oc">
+  <div class="sec-head"><div class="num" style="background:#F97316">O</div><div><h2>OpenCode：免費額度不夠用時的第四個工具，也是會自己動手的「代理」</h2><p>三家免費帳號的額度一個下午就可能用完。OpenCode 是開源、免費的 AI 代理工具，內建免費模型，可以接著把教案做完；而且它會直接在你的資料夾裡建檔、改檔、開瀏覽器給你看。</p></div></div>
+  <div class="card oc-c">
+    <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between">
+      <div style="flex:1 1 320px">
+        <h3 style="margin-top:0"><span class="t oc">OpenCode</span>桌面版下載</h3>
+        <p style="margin:0 0 6px">Mac（Apple 晶片／Intel）與 Windows 都有安裝檔；官網有繁體中文頁面。開源、不用付費，費用只來自你選的模型，而<b>內建免費模型不用錢</b>。</p>
+        <p style="margin:0;color:var(--muted)">安裝約 3 分鐘。院內公務電腦不能裝軟體的同仁，可先看示範，回家再裝。</p>
+      </div>
+      <div class="row" style="margin:0">
+        <a class="btn" href="https://opencode.ai/download" target="_blank" rel="noopener" style="background:#F97316;border-color:#F97316">前往下載頁</a>
+        <a class="btn ghost" href="https://opencode.ai/zht" target="_blank" rel="noopener">繁體中文官網</a>
+      </div>
+    </div>
+  </div>
+  <div class="grid3">
+    <div class="b3"><h4>它和 ChatGPT 差在哪</h4><p style="margin:0">對話工具是「你問一句、它回一句，檔案要自己存」。代理是「你交辦一件事，它自己拆步驟、建檔案、執行、回報」。做網頁教案時，它會直接把 index.html 存進資料夾，還能開瀏覽器讓你看。</p></div>
+    <div class="b3"><h4>為什麼今天要介紹它</h4><p style="margin:0">第一，<b>免費模型</b>：三家額度用完，換到這裡繼續改同一個檔案。第二，<b>一次做一整套</b>：「把這個教案做成網頁、A4 學習單和 10 頁簡報，放在同一個資料夾」一句話交辦。</p></div>
+    <div class="b3"><h4>最重要的一條規矩</h4><p style="margin:0">代理會<b>真的讀寫檔案</b>。永遠只指向一個專門的練習資料夾（例如「桌面／AI教案」），不要指向桌面、文件或任何有病人資料的資料夾。</p></div>
+  </div>
+
+  <div class="card">
+    <h3>第一次打開要做的設定（約 5 分鐘）</h3>
+    <ol class="steps">
+      <li>安裝後開啟 OpenCode。Mac 第一次開啟若出現提醒，按「打開」；Windows 出現「已保護您的電腦」，確認來源是 opencode.ai 後選「其他資訊 → 仍要執行」。</li>
+      <li>選模型：先用<b>內建免費模型</b>（課堂示範用 Nemotron 3 Ultra Free）就能跑；想用熟悉的模型，用「連接供應商」登入 ChatGPT 帳號，或貼上 Gemini／Claude 的 API 金鑰（進階，今天不用）。</li>
+      <li>在桌面建立一個練習資料夾「AI教案」，裡面只放合成範例與已公開的素材。</li>
+      <li>在 OpenCode 打開這個資料夾。<b>成功的樣子：</b>左上角顯示資料夾名稱、輸入框下方顯示模型名稱。打一句「這個資料夾裡有哪些檔案？」它列得出來就對了。</li>
+    </ol>
+    <div class="prompt"><span class="label">第一個交辦（把今天的教案一次做完）</span>這個資料夾是我的教案工作區。請依照 教案.txt 裡的團體活動內容，做出三個檔案：
+1. game.html：單一檔案的網頁版活動（平板可玩、按鈕大、高對比、有重新開始）
+2. worksheet.html：A4 可列印學習單（字級 20pt 以上、@media print 只印學習單）
+3. slides.html：10 頁帶團體用的 HTML 簡報（← → 翻頁、F 全螢幕、字級最小 28px）
+全部不用外部圖片與程式庫。每做完一個就在瀏覽器打開讓我看，我確認後再做下一個。最後給我一份 README.md 說明每個檔案怎麼用。</div>
+  </div>
+  <div class="card" id="freelimit" style="margin-top:12px;border-left:5px solid #B45309">
+      <h3>「免費」不是無限：跳出 Rate limit exceeded 怎麼辦</h3>
+      <p style="margin-top:0">免費模型用一陣子，回覆會變成一行紅字 <code>Rate limit exceeded. Please try again later.</code>，不會告訴你還要等多久。講師查過 2026 年 10 月官方 GitHub 上的多起回報與官方回覆，整理如下：</p>
+      <div class="grid3">
+        <div class="b3"><h4>限制怎麼算</h4><ul style="margin:0;padding-left:1.2em">
+          <li>限制在<b>伺服器端、以你的帳號（或同一網路）為單位</b>，不是每個模型各一份。所以<b>換另一個免費模型沒有用</b>，換資料夾也沒用。</li>
+          <li>官方沒有公布額度數字，也不顯示重置時間，只說「通常過一陣子會恢復」。使用者回報從幾十分鐘到兩三小時不等。</li>
+          <li>同時開兩個對話一起跑，會更快用完。</li>
+          <li>免費模型只能在 OpenCode 裡用，在別的程式接不上。</li>
+        </ul></div>
+        <div class="b3"><h4>遇到了怎麼辦</h4><ol class="steps" style="margin:0">
+          <li>先別急著重送，每送一次都算一次。</li>
+          <li>把要做的事寫在記事本，<b>休息 30～60 分鐘</b>再試；課堂上就先換到下一個不需要 AI 的步驟（看檔、核對、整理資料夾）。</li>
+          <li>要立刻繼續：在「連接供應商」登入你已付費的 ChatGPT 帳號，或儲值 US$5～10 用計次模型。</li>
+          <li>一直沒恢復：到 <a href="https://opencode.ai/console" target="_blank" rel="noopener">opencode.ai/console</a> 看用量，或寫信給 help@anoma.ly 附上開始日期與用的模型。</li>
+        </ol></div>
+        <div class="b3"><h4>怎麼省著用</h4><ul style="margin:0;padding-left:1.2em">
+          <li><b>一次交辦寫完整</b>（人事時地物＋Why＋輸出格式），比來回改十次省。</li>
+          <li>同一個網路教室 20 個人同時跑，可能一起被擋：講師示範一次，學員<b>分批</b>跑。</li>
+          <li>讀長檔案前先請它「只讀前 50 列／前 2 頁」確認方向，再放全量。</li>
+          <li>教室若一直被擋，改用 ChatGPT 的 Work 或 Claude 的 Cowork 做同一題（第 ②、③ 層對照見下方階梯表）。</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="note red"><b>和對話工具一樣的界線：</b>免費模型的資料政策各家不同，部分會用你的輸入訓練模型。<b>只放教案與合成資料，不放任何病人資料與院內文件。</b>用量可到 opencode.ai/console 查看。</div>
+</section>
+
+<!-- lib -->
+<section id="lib">
+<div class="sec-head"><div class="num">11</div><div><h2>教案實例庫：今天方法做出來的 65 個教案，直接拿去帶</h2><p>按類型篩選，點「打開」就能用；每一個都是單一 HTML 檔放在 GitHub Pages 上，也就是今天教的流程。想要原始檔或 A4 版，到<a href="#fanpage">粉專</a>留言。</p></div></div>
+<div class="card">
+<div class="chips"><button class="chip on" data-c="all">全部</button><button class="chip" data-c="paper">紙本操作</button><button class="chip" data-c="anim">動畫</button><button class="chip" data-c="game">遊戲</button><button class="chip" data-c="art">藝術</button><button class="chip" data-c="db">資料庫</button></div>
+<p class="libcount" id="libCount"></p>
+<div class="libgrid" id="libGrid">
+<div class="libcard" data-c="paper anim"><div class="cats"><span class="cat paper">紙本操作</span><span class="cat anim">動畫</span></div><h4>點格仿畫・運筆練習</h4><p>30 課點陣仿畫與對稱補畫：步驟動畫投影帶做，A4 紙本生成器直接印。</p><a class="go" href="https://mattsue1003.github.io/dot-copy-drawing/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="paper art"><div class="cats"><span class="cat paper">紙本操作</span><span class="cat art">藝術</span></div><h4>紙編織紙本生成器</h4><p>12 種花樣、經緯數可調，一次產出編織圖、底紙剪開線與編織條。</p><a class="go" href="https://mattsue1003.github.io/paper-weaving-generator/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="paper art"><div class="cats"><span class="cat paper">紙本操作</span><span class="cat art">藝術</span></div><h4>窗櫺紋紙本生成器</h4><p>老窗吉祥花樣，上色、剪紙、做卡片，懷舊與精細動作一次練。</p><a class="go" href="https://mattsue1003.github.io/window-lattice-generator/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="paper art"><div class="cats"><span class="cat paper">紙本操作</span><span class="cat art">藝術</span></div><h4>大花布紙本生成器</h4><p>牡丹梅花菊花圖樣、8 種配色，彩色／淡彩／線稿，可做書籤紅包袋杯墊。</p><a class="go" href="https://mattsue1003.github.io/hakka-floral-generator/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="paper"><div class="cats"><span class="cat paper">紙本操作</span></div><h4>繁花曲線紙本生成器</h4><p>內滾／外滾擺線 A4 紙本：描線、上色、彩色版，附動畫示範。</p><a class="go" href="https://mattsue1003.github.io/spirograph-generator/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="paper game"><div class="cats"><span class="cat paper">紙本操作</span><span class="cat game">遊戲</span></div><h4>藝術迷宮紙本生成器</h4><p>20 種造型的 A4 迷宮產生器，難度可調，可列印或匯出 PDF。</p><a class="go" href="https://mattsue1003.github.io/art-maze-generator/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="paper"><div class="cats"><span class="cat paper">紙本操作</span></div><h4>連連看生成器</h4><p>點數、圖形、字級可調的連連看學習單，每按一次換一張。</p><a class="go" href="https://mattsue1003.github.io/connect-the-dots-generator/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="paper"><div class="cats"><span class="cat paper">紙本操作</span></div><h4>銀髮健腦算術學習單生成器</h4><p>加減乘除與生活情境題，字大、留白多，適合認知與復能團體。</p><a class="go" href="https://mattsue1003.github.io/math-worksheet-generator123/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="paper"><div class="cats"><span class="cat paper">紙本操作</span></div><h4>高階認知挑戰紙本生成器</h4><p>推理、序列、規則轉換等較高階的認知作業單，可分級列印。</p><a class="go" href="https://mattsue1003.github.io/advanced-cognitive-training/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="paper game"><div class="cats"><span class="cat paper">紙本操作</span><span class="cat game">遊戲</span></div><h4>填字遊戲紙本生成器</h4><p>自訂主題與詞彙的填字遊戲，產生題目與解答兩版。</p><a class="go" href="https://mattsue1003.github.io/crossword-puzzle-paper/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="paper game"><div class="cats"><span class="cat paper">紙本操作</span><span class="cat game">遊戲</span></div><h4>舒爾特方格生成器</h4><p>注意力訓練經典：數字、注音、顏色版，可投影計時也可列印。</p><a class="go" href="https://mattsue1003.github.io/schultetable/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="paper"><div class="cats"><span class="cat paper">紙本操作</span></div><h4>運筆練習紙本生成器</h4><p>直線、曲線、迷宮式運筆路徑，粗細與間距可調。</p><a class="go" href="https://mattsue1003.github.io/line-tracing-practice/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="paper"><div class="cats"><span class="cat paper">紙本操作</span></div><h4>視覺搜尋紙本生成器</h4><p>在一片干擾物中找目標，視知覺與持續注意力的紙本作業。</p><a class="go" href="https://mattsue1003.github.io/visual-exploration-paper/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="paper"><div class="cats"><span class="cat paper">紙本操作</span></div><h4>筆順寫字本產生器</h4><p>輸入任何字就產生筆順與描紅格，書寫與認知訓練用。</p><a class="go" href="https://mattsue1003.github.io/stroke-order-copybook/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="paper game"><div class="cats"><span class="cat paper">紙本操作</span><span class="cat game">遊戲</span></div><h4>賓果生成器</h4><p>自訂詞彙或圖片的賓果卡，一次產出整個團體的不重複卡片。</p><a class="go" href="https://mattsue1003.github.io/new-bingo-generator/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="paper game"><div class="cats"><span class="cat paper">紙本操作</span><span class="cat game">遊戲</span></div><h4>桌遊生成器</h4><p>撲克牌、對對碰、組合、分類四種桌遊卡牌一鍵產出可列印版。</p><a class="go" href="https://mattsue1003.github.io/board-game-generator/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="paper"><div class="cats"><span class="cat paper">紙本操作</span></div><h4>空間邏輯拼圖生成器</h4><p>剪開再拼回的空間邏輯題，視覺空間與動作計畫一起練。</p><a class="go" href="https://mattsue1003.github.io/cut-brain-train/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="paper art"><div class="cats"><span class="cat paper">紙本操作</span><span class="cat art">藝術</span></div><h4>立體紙模型生成器</h4><p>可調式紙模型展開圖，剪、摺、黏的精細動作與順序活動。</p><a class="go" href="https://mattsue1003.github.io/3d-paper-model-generator/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="paper"><div class="cats"><span class="cat paper">紙本操作</span></div><h4>失智友善標示・提示卡生成器</h4><p>病房與居家環境的圖文提示卡，字大圖清楚，直接列印貼。</p><a class="go" href="https://mattsue1003.github.io/dementia-cues/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="anim art paper"><div class="cats"><span class="cat anim">動畫</span><span class="cat art">藝術</span><span class="cat paper">紙本操作</span></div><h4>平結手環（簡易編繩）</h4><p>12 課步驟動畫教案＋A4 學習單，雙手協調與序列記憶。</p><a class="go" href="https://mattsue1003.github.io/square-knot-bracelet/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="anim art"><div class="cats"><span class="cat anim">動畫</span><span class="cat art">藝術</span></div><h4>輕黏土造型教案</h4><p>8 個基本功＋24 個主題課的步驟動畫與 A4 學習單。</p><a class="go" href="https://mattsue1003.github.io/clay-modeling-lessons/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="anim art paper"><div class="cats"><span class="cat anim">動畫</span><span class="cat art">藝術</span><span class="cat paper">紙本操作</span></div><h4>曼陀羅一圈一圈畫</h4><p>24 課曼陀羅教學動畫、A4 學習單與自己設計的頁面。</p><a class="go" href="https://mattsue1003.github.io/mandala-lessons/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="anim art"><div class="cats"><span class="cat anim">動畫</span><span class="cat art">藝術</span></div><h4>紙盤編織・毛根造型</h4><p>12 課步驟動畫教案與實際大小 A4 模板，材料便宜安全。</p><a class="go" href="https://mattsue1003.github.io/plate-weaving-pipecleaner/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="anim art"><div class="cats"><span class="cat anim">動畫</span><span class="cat art">藝術</span></div><h4>撕貼畫・馬賽克</h4><p>12 課步驟動畫，附 A4 底稿 PDF；不用剪刀，撕紙就能做。</p><a class="go" href="https://mattsue1003.github.io/torn-paper-mosaic/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="anim art"><div class="cats"><span class="cat anim">動畫</span><span class="cat art">藝術</span></div><h4>衍紙・捲紙教案</h4><p>10 種基本捲法＋12 課步驟動畫、A4 擺放底稿。</p><a class="go" href="https://mattsue1003.github.io/quilling-lessons/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="anim game"><div class="cats"><span class="cat anim">動畫</span><span class="cat game">遊戲</span></div><h4>反應動作動畫產生器</h4><p>帶團設定與播放：看到指定圖示做指定動作，體智能團體用。</p><a class="go" href="https://mattsue1003.github.io/cognitive-reaction-animation/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="anim game"><div class="cats"><span class="cat anim">動畫</span><span class="cat game">遊戲</span></div><h4>相反詞動畫訓練</h4><p>聽到或看到一個詞，做出相反的動作；抑制控制訓練。</p><a class="go" href="https://mattsue1003.github.io/contrast-animation/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="anim"><div class="cats"><span class="cat anim">動畫</span></div><h4>站起來才算數：功能性訓練衛教動畫</h4><p>16:9 衛教動畫分 7 段觀看＋互動問答、30 秒坐站測試與練習卡。</p><a class="go" href="https://mattsue1003.github.io/functional-training-lesson/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="anim"><div class="cats"><span class="cat anim">動畫</span></div><h4>在家也要走得穩：居家防跌電影教學法</h4><p>把動畫分段播放、每段停下來問問題的互動簡報範例。</p><a class="go" href="https://mattsue1003.github.io/animation-teaching-fall-prevention/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="anim"><div class="cats"><span class="cat anim">動畫</span></div><h4>巴金森居家訓練：大聲說話 × 大動作</h4><p>3D 示範影片，動作幅度與音量訓練的居家版。</p><a class="go" href="https://mattsue1003.github.io/parkinson-home-training/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="game"><div class="cats"><span class="cat game">遊戲</span></div><h4>台灣金曲猜歌</h4><p>15 組歌單 300 首，播前奏、提示、公布答案，懷舊團體開場首選。</p><a class="go" href="https://mattsue1003.github.io/pop-song-guess/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="game"><div class="cats"><span class="cat game">遊戲</span></div><h4>打地鼠大冒險</h4><p>課堂上教大家做的第一個網頁遊戲，反應與手眼協調。</p><a class="go" href="https://mattsue1003.github.io/whack-a-mole/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="game"><div class="cats"><span class="cat game">遊戲</span></div><h4>老藝人懷舊猜猜看</h4><p>30 位老藝人的懷舊猜謎，現實導向與長期記憶提取。</p><a class="go" href="https://mattsue1003.github.io/oldstar-geuss-game/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="game"><div class="cats"><span class="cat game">遊戲</span></div><h4>安全偵探社：危險在哪裡？</h4><p>在居家場景裡找出危險，點選即回饋，適合出院準備團體。</p><a class="go" href="https://mattsue1003.github.io/home-safety-hazard-game/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="game"><div class="cats"><span class="cat game">遊戲</span></div><h4>節慶連連拍 Festival Snap</h4><p>節慶主題的反應桌遊，投影即可帶，兩隊對抗。</p><a class="go" href="https://mattsue1003.github.io/festival-reaction-board-game/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="game"><div class="cats"><span class="cat game">遊戲</span></div><h4>台灣鳥朋友：互動猜鳥</h4><p>看局部猜整隻、聽叫聲猜鳥，社區與日間病房的輕鬆團體。</p><a class="go" href="https://mattsue1003.github.io/guess-bird/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="game"><div class="cats"><span class="cat game">遊戲</span></div><h4>花花世界：互動猜花教室</h4><p>猜花名、認花語，懷舊與季節導向的討論素材。</p><a class="go" href="https://mattsue1003.github.io/flowers-guess/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="game paper"><div class="cats"><span class="cat game">遊戲</span><span class="cat paper">紙本操作</span></div><h4>色字大亂鬥：Stroop 桌遊生成器</h4><p>字色衝突的抑制控制遊戲，投影玩或印成卡牌。</p><a class="go" href="https://mattsue1003.github.io/stroop2/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="game"><div class="cats"><span class="cat game">遊戲</span></div><h4>分一分 動一動：分類反應簡報遊戲</h4><p>看到圖片判斷類別並做動作，認知與動作雙重任務。</p><a class="go" href="https://mattsue1003.github.io/judgment-ppt-game/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="game"><div class="cats"><span class="cat game">遊戲</span></div><h4>圖片記憶對對碰</h4><p>翻牌配對，難度可調，平板與投影都能玩。</p><a class="go" href="https://mattsue1003.github.io/memorygame/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="game anim"><div class="cats"><span class="cat game">遊戲</span><span class="cat anim">動畫</span></div><h4>台灣著名景點：馬賽克猜謎</h4><p>圖片從模糊到清楚逐步揭曉，全場搶答。</p><a class="go" href="https://mattsue1003.github.io/mosaic-animation/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="game paper"><div class="cats"><span class="cat game">遊戲</span><span class="cat paper">紙本操作</span></div><h4>火柴棒動腦遊戲</h4><p>棉花棒、牙籤也能玩的移動火柴棒題庫，附解答。</p><a class="go" href="https://mattsue1003.github.io/matchstick-game/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="game"><div class="cats"><span class="cat game">遊戲</span></div><h4>手機體感遊戲台</h4><p>用手機當搖桿的體感小遊戲，站著動起來。</p><a class="go" href="https://mattsue1003.github.io/motion-control-game/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="game"><div class="cats"><span class="cat game">遊戲</span></div><h4>台灣好味島</h4><p>台灣名產與地圖結合的互動猜謎教案。</p><a class="go" href="https://mattsue1003.github.io/taiwan-taste-island/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="art"><div class="cats"><span class="cat art">藝術</span></div><h4>指紋棉花棒創作</h4><p>用指紋與棉花棒點畫完成作品，不需剪刀，材料好取得。</p><a class="go" href="https://mattsue1003.github.io/fingerprint-swab-art/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="art anim"><div class="cats"><span class="cat art">藝術</span><span class="cat anim">動畫</span></div><h4>纏繞畫步驟示範</h4><p>方形、圓形、A4 各 12 課，逐步示範線條圖樣。</p><a class="go" href="https://mattsue1003.github.io/tangle-steps/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="art paper"><div class="cats"><span class="cat art">藝術</span><span class="cat paper">紙本操作</span></div><h4>對摺剪紙工坊</h4><p>對摺剪紙的圖樣與步驟，可印底稿。</p><a class="go" href="https://mattsue1003.github.io/paper-cut-workshop/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="art paper"><div class="cats"><span class="cat art">藝術</span><span class="cat paper">紙本操作</span></div><h4>圓點藝術著色畫生成器</h4><p>普普風圓點著色畫，區塊大、線條粗。</p><a class="go" href="https://mattsue1003.github.io/pop-art-coloring/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="art paper"><div class="cats"><span class="cat art">藝術</span><span class="cat paper">紙本操作</span></div><h4>纏繞畫引導練習單生成器</h4><p>分格引導的纏繞畫練習單，從描到自己畫。</p><a class="go" href="https://mattsue1003.github.io/zentangle-practice/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="art paper"><div class="cats"><span class="cat art">藝術</span><span class="cat paper">紙本操作</span></div><h4>藝術標籤貼紙畫生成器</h4><p>用圓形標籤貼紙拼貼成畫的底稿產生器。</p><a class="go" href="https://mattsue1003.github.io/sticker-creation/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="art paper"><div class="cats"><span class="cat art">藝術</span><span class="cat paper">紙本操作</span></div><h4>曼陀羅著色畫生成器</h4><p>隨機產生對稱曼陀羅線稿，每次都不一樣。</p><a class="go" href="https://mattsue1003.github.io/mandala-generator/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="db"><div class="cats"><span class="cat db">資料庫</span></div><h4>按摩球影音資料庫</h4><p>依身體部位與痠痛問題找單顆按摩球教學影片。</p><a class="go" href="https://mattsue1003.github.io/massage-ball/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="db"><div class="cats"><span class="cat db">資料庫</span></div><h4>轉移位影片資料庫</h4><p>依情境與輔具分類的轉移位示範影片庫。</p><a class="go" href="https://mattsue1003.github.io/transfer-video-library/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="db"><div class="cats"><span class="cat db">資料庫</span></div><h4>失智長輩活動資料庫</h4><p>據點、日照、居家適用的活動教案、影片與網頁資源。</p><a class="go" href="https://mattsue1003.github.io/dementia-activity-database/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="db art"><div class="cats"><span class="cat db">資料庫</span><span class="cat art">藝術</span></div><h4>長者手工藝教案資料庫</h4><p>依材料、難度、時間篩選的手工藝教案庫。</p><a class="go" href="https://mattsue1003.github.io/art-senior-database/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="db"><div class="cats"><span class="cat db">資料庫</span></div><h4>體智共創：認知運動活動與教案資料庫</h4><p>認知結合運動的活動教案，可搜尋可篩選。</p><a class="go" href="https://mattsue1003.github.io/cognicise-database/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="db"><div class="cats"><span class="cat db">資料庫</span></div><h4>彈力帶・椅子動作資料庫</h4><p>坐姿與站姿的彈力帶動作，依部位查詢。</p><a class="go" href="https://mattsue1003.github.io/band-exercise-database/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="db"><div class="cats"><span class="cat db">資料庫</span></div><h4>日本日照團康影片中文資料庫</h4><p>日本日照中心團康與體操影片的中文整理。</p><a class="go" href="https://mattsue1003.github.io/japan-dayservice-activity-videos/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="db"><div class="cats"><span class="cat db">資料庫</span></div><h4>日照活動靈感庫</h4><p>台灣、日本與歐美活動 YouTube 頻道資料庫。</p><a class="go" href="https://mattsue1003.github.io/daycare-activity-library/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="db"><div class="cats"><span class="cat db">資料庫</span></div><h4>日照中心社會參與教案資料庫</h4><p>以社會參與為目標的團體教案整理。</p><a class="go" href="https://mattsue1003.github.io/participation-interaction-database/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="db"><div class="cats"><span class="cat db">資料庫</span></div><h4>失智症溝通技巧資料庫</h4><p>依情境查詢的溝通技巧與話術卡。</p><a class="go" href="https://mattsue1003.github.io/dementia-communication-database/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="db"><div class="cats"><span class="cat db">資料庫</span></div><h4>長照輔具資料庫</h4><p>依功能與食衣住行樂查詢輔具，連結補助資訊。</p><a class="go" href="https://mattsue1003.github.io/long-term-care-assistive-devices-database/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="db anim"><div class="cats"><span class="cat db">資料庫</span><span class="cat anim">動畫</span></div><h4>折氣球互動教案庫</h4><p>10 支長條氣球教學影片＋團體遊戲教案。</p><a class="go" href="https://mattsue1003.github.io/balloon-twisting-lessons/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="db game"><div class="cats"><span class="cat db">資料庫</span><span class="cat game">遊戲</span></div><h4>簡易道具玩法教案資料庫</h4><p>撲克牌、骰子等簡單道具的團體玩法整理。</p><a class="go" href="https://mattsue1003.github.io/poker-dice-game/" target="_blank" rel="noopener">打開</a></div>
+<div class="libcard" data-c="db"><div class="cats"><span class="cat db">資料庫</span></div><h4>正念引導牌卡</h4><p>互動式正念引導卡，團體開場與收尾用。</p><a class="go" href="https://mattsue1003.github.io/mindfulness-card/" target="_blank" rel="noopener">打開</a></div>
+</div></div>
+<div class="grid3"><div class="b3"><h4>怎麼帶走一個教案</h4><p style="margin:0">打開後把網址存到手機書籤或做成 QR 貼在活動室；紙本類直接按「列印」。要改內容（例如把詞彙換成病房常用語），把網頁另存成 .html 丟給 AI 說「幫我改」。</p></div>
+<div class="b3"><h4>怎麼挑</h4><p style="margin:0">急性病房先選規則少、不用剪刀的：猜歌、猜鳥、賓果、撕貼畫、指紋棉花棒。日間病房與社區復健可以用生成器讓個案自己調難度，練習做選擇。</p></div>
+<div class="b3"><h4>怎麼回饋</h4><p style="margin:0">帶完覺得哪裡卡、想要哪種變化，用右下角「回報問題」或到粉專留言。常被提到的需求會變成下一個教案。</p></div></div>
+</section>
+<!-- end -->
+<section id="end">
+  <div class="sec-head"><div class="num">12</div><div><h2>課後任務，以及到粉專領教案</h2><p>今天學的東西，兩週內用三次就會變成習慣。勾選會自動記在這台裝置的瀏覽器裡。</p></div></div>
+  <div class="card">
+    <h3>這兩週試試看</h3>
+    <div class="progress"><i id="bar"></i></div>
+    <div id="checklist" class="checks">
+      <label class="check"><input type="checkbox" data-k="a"><span>每天至少一次，用 Typeless 取代打字（紀錄草稿、LINE 訊息都算）。</span></label>
+      <label class="check"><input type="checkbox" data-k="b"><span>用「帶入病人條件」的範本，寫出下週要帶的一份團體教案，並請 AI 當督導挑錯。</span></label>
+      <label class="check"><input type="checkbox" data-k="c"><span>用 ChatGPT 生出一組 6 張風格一致的圖卡，做一次「只改一處」的局部修改。</span></label>
+      <label class="check"><input type="checkbox" data-k="d"><span>在 Gemini「任務」裡做一份 8 頁簡報，匯出後用 Canva 魔法圖層改掉一處錯字。</span></label>
+      <label class="check"><input type="checkbox" data-k="e"><span>請 AI 做出一個網頁遊戲或紙本生成器，用 Gemini 分享或 GitHub 拿到網址，用手機打開。</span></label>
+      <label class="check"><input type="checkbox" data-k="f"><span>把今天做的教案上傳到自己的 GitHub Pages，網址貼給科內同事試玩。</span></label>
+      <label class="check"><input type="checkbox" data-k="g"><span>裝好 OpenCode，用免費模型交辦一次「把教案做成三個檔案」。</span></label>
+      <label class="check"><input type="checkbox" data-k="h"><span>到教案實例庫挑一個現成教案，下週直接帶一場，記下病人的反應與要改的地方。</span></label>
+    </div>
+  </div>
+
+  <div class="card fb" id="fanpage">
+    <div class="fb-in">
+      <div class="fb-ico">f</div>
+      <div>
+        <h3 style="margin:0 0 6px">愛迪樂 臉書粉絲專頁：看過去的教案、領新教案</h3>
+        <p style="margin:0 0 10px">今天示範的 65 個教案只是其中一部分。粉專每週都有新的教案、步驟動畫與專業文章，<b>看到想要的，在貼文底下留言就能取得連結</b>。也歡迎把今天做出來的教案網址貼到粉專留言，讓更多治療師看到。</p>
+        <ol class="steps" style="margin:0 0 12px">
+          <li>點下方按鈕打開粉專，按「追蹤」並設定「搶先看」，新教案才不會被演算法吃掉。</li>
+          <li>翻一翻過去的貼文，每篇教案都有可以直接打開的網頁連結。</li>
+          <li>想要哪一份教案的原始檔或 A4 版，在那篇貼文留言「＋1」或寫下你想用在哪個團體，講師會回覆連結。</li>
+          <li>有課程、工作坊或科內研習的邀約，直接私訊粉專。</li>
+        </ol>
+        <div class="row" style="margin:0">
+          <a class="btn fbc" href="https://www.facebook.com/profile.php?id=100063748491881" target="_blank" rel="noopener">前往愛迪樂粉專，追蹤並領取教案</a>
+          <a class="btn ghost" href="#lib">再看一次 65 個教案</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="note teal"><b>把今天的講義分享給沒來的同事：</b>這個網頁會一直在，掃封面的 QR code 或傳網址 <b>mattsue1003.github.io/taoyuan-psychiatric-ot-ai</b> 就好。發現錯誤或想補充的內容，用右下角的「回報問題」按鈕告訴講師。</div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b style="color:#fff">衛生福利部桃園療養院 職能治療科｜AI 教案製作工作坊（2026/11/3）</b><br>授課講師：鍾孟修 職能治療師（愛迪樂）｜<a href="https://www.facebook.com/profile.php?id=100063748491881" target="_blank" rel="noopener">臉書粉專</a>｜<a href="mailto:adlotmatt@gmail.com">adlotmatt@gmail.com</a></p>
+    <p>課程配套工具：<a href="https://typeless.com/" target="_blank" rel="noopener">Typeless</a>、<a href="https://gemini.google.com/" target="_blank" rel="noopener">Gemini</a>、<a href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT</a>、<a href="https://claude.ai/" target="_blank" rel="noopener">Claude</a>、<a href="https://www.canva.com/" target="_blank" rel="noopener">Canva</a>、<a href="https://deckedit.com/zh-Hant" target="_blank" rel="noopener">DeckEdit</a>、<a href="https://opencode.ai/zht" target="_blank" rel="noopener">OpenCode</a>、<a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>。各工具介面與免費額度會隨版本變動，以官方說明為準。課程練習全程使用合成資料，不涉及真實病人資料。</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast">已複製</div>
+
+<script>
+(function(){
+  var toast=document.getElementById('toast');
+  function showToast(t){toast.textContent=t||'已複製';toast.classList.add('show');setTimeout(function(){toast.classList.remove('show')},1400)}
+  function copyText(txt){
+    if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(txt).then(function(){showToast()},fallback)}else{fallback()}
+    function fallback(){var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');showToast()}catch(e){showToast('請手動複製')}document.body.removeChild(ta)}
+  }
+  // copy buttons: add one to every prompt box that lacks it
+  document.querySelectorAll('.prompt').forEach(function(p){if(!p.querySelector('.copy')){var b=document.createElement('button');b.className='copy';b.textContent='複製';p.appendChild(b)}});
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.copy');if(!b)return;
+    var box=b.parentElement,txt;
+    if(b.dataset.src){txt=document.getElementById(b.dataset.src).textContent}
+    else{var c=box.cloneNode(true);c.querySelectorAll('.copy,.label').forEach(function(n){n.remove()});txt=c.textContent.trim()}
+    copyText(txt);
+  });
+
+  // tabs
+  document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){var g=t.dataset.g;document.querySelectorAll('.tab[data-g="'+g+'"]').forEach(function(x){x.classList.toggle('on',x===t)});document.querySelectorAll('.panel[data-g="'+g+'"]').forEach(function(x){x.classList.toggle('on',x.id===t.dataset.t)})})});
+
+  // checklist
+  var boxes=[].slice.call(document.querySelectorAll('#checklist input')),bar=document.getElementById('bar');
+  function upd(){var n=boxes.filter(function(b){return b.checked}).length;bar.style.width=(n/boxes.length*100)+'%'}
+  boxes.forEach(function(b){
+    try{b.checked=localStorage.getItem('typcot-'+b.dataset.k)==='1'}catch(e){}
+    b.addEventListener('change',function(){try{localStorage.setItem('typcot-'+b.dataset.k,b.checked?'1':'0')}catch(e){}upd()});
+  });
+  upd();
+
+  // 六要素 prompt builder
+  var P={
+    group:['精神科資深職能治療師','急性病房 8 位成人個案，診斷以思覺失調症與雙相情緒障礙為主、症狀穩定，2 位有手部震顫','設計一個 40 分鐘的「報紙球投籃」團體活動教案，目標是輪流、等待與上肢粗大動作','材料只能用報紙、膠帶、塑膠桶；規則最多 3 條；不新增我沒說的病人資訊','流程表（時間、步驟、帶領者說的話、觀察重點）＋材料清單＋3 個常見狀況的處理，一頁內','列出你假設了哪些病人條件；會因病人狀況而不同的建議標【需治療師確認】'],
+    sheet:['精神科資深職能治療師','日間病房 10 位成人個案，注意力約 15 分鐘，部分閱讀能力有限','設計一張 A4 認知學習單「今天的日期與天氣」，練習現實導向與書寫','字級 20pt 以上、最多 6 格、留白多；不用兒童風格的圖案與用語','先用文字說明版面，再用單一檔案 HTML 做出可直接列印的版本','標出哪些格子對手部震顫的個案太小，並給替代做法'],
+    family:['精神科資深職能治療師','個案的家屬，沒有醫療背景，多數 50～70 歲','把下面這份團體活動教案改寫成一頁給家屬看的說明，讓家屬知道個案在團體裡練什麼、回家可以怎麼延伸','不透露其他個案的資訊；不做任何療效保證；不用專業術語，必要時加括號說明','標題＋「我們在練什麼」3 點＋「在家可以這樣做」3 點＋一句鼓勵的話，300 字內','列出你改寫時刪掉或簡化的專業內容，讓我核對']
+  };
+  var pre=document.getElementById('preset');
+  if(pre){pre.onchange=function(){var v=P[this.value];if(!v)return;for(var i=0;i<6;i++)document.getElementById('p'+(i+1)).value=v[i]};
+  document.getElementById('build').onclick=function(){
+    var lab=['你是','對象：','任務：','限制：','格式：','查核：'],lines=[];
+    for(var i=0;i<6;i++){var v=document.getElementById('p'+(i+1)).value.trim();if(v)lines.push(lab[i]+v+(i===0?'。':''))}
+    if(!lines.length){showToast('請先填寫或選擇範例');return}
+    lines.push('','如果還有不清楚的地方，在你回答我之前，先問我問題。','','【原始教案或素材】','（需要時貼在這裡）');
+    document.getElementById('built').textContent=lines.join('\n');
+    document.getElementById('builtBox').style.display='block';
+  };}
+
+  // library filter
+  var chips=[].slice.call(document.querySelectorAll('.chip')),cards=[].slice.call(document.querySelectorAll('.libcard')),lc=document.getElementById('libCount');
+  function filt(c){var n=0;cards.forEach(function(k){var ok=c==='all'||(' '+k.dataset.c+' ').indexOf(' '+c+' ')>=0;k.classList.toggle('hide',!ok);if(ok)n++});if(lc)lc.textContent='顯示 '+n+' 個教案'+(c==='all'?'（全部）':'')}
+  chips.forEach(function(ch){ch.addEventListener('click',function(){chips.forEach(function(x){x.classList.toggle('on',x===ch)});filt(ch.dataset.c)})});
+  if(cards.length)filt('all');
+
+  // search
+  var $=function(id){return document.getElementById(id)};
+  var sIn=$('q'),sCnt=$('qCount'),marks=[],cur=-1,sT;
+  function clearMarks(){marks.forEach(function(m){var p=m.parentNode;if(!p)return;p.replaceChild(document.createTextNode(m.textContent),m);p.normalize()});marks=[];cur=-1;sCnt.textContent=''}
+  function doSearch(){clearMarks();var q=sIn.value.trim();if(!q)return;var lq=q.toLowerCase();var main=document.querySelector('main');var w=document.createTreeWalker(main,NodeFilter.SHOW_TEXT,{acceptNode:function(n){if(!n.nodeValue.trim())return NodeFilter.FILTER_REJECT;var p=n.parentNode;if(!p||p.closest('script,style,textarea,select,option,button,.copy'))return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT}});var nodes=[];while(w.nextNode())nodes.push(w.currentNode);
+    nodes.forEach(function(n){var t=n.nodeValue,lt=t.toLowerCase(),i=lt.indexOf(lq);if(i<0)return;var frag=document.createDocumentFragment(),last=0;while(i>=0){frag.appendChild(document.createTextNode(t.slice(last,i)));var m=document.createElement('mark');m.className='hit';m.textContent=t.slice(i,i+q.length);frag.appendChild(m);marks.push(m);last=i+q.length;i=lt.indexOf(lq,last)}frag.appendChild(document.createTextNode(t.slice(last)));n.parentNode.replaceChild(frag,n)});
+    if(!marks.length){sCnt.textContent='找不到';return}go(0)}
+  function go(i){if(!marks.length)return;if(cur>=0)marks[cur].classList.remove('cur');cur=(i+marks.length)%marks.length;var m=marks[cur];m.classList.add('cur');var d=m.closest('details');while(d){d.open=true;d=d.parentElement&&d.parentElement.closest('details')}var p=m.closest('.panel');if(p&&!p.classList.contains('on')){var g=p.getAttribute('data-g');[].forEach.call(document.querySelectorAll('.panel[data-g="'+g+'"]'),function(x){x.classList.remove('on')});p.classList.add('on');[].forEach.call(document.querySelectorAll('.tab[data-g="'+g+'"]'),function(t){t.classList.toggle('on',t.getAttribute('data-t')===p.id)})}var bb=document.getElementById('builtBox');if(bb&&bb.contains(m))bb.style.display='block';var y=m.getBoundingClientRect().top+window.pageYOffset-150;window.scrollTo({top:y,behavior:'smooth'});sCnt.textContent=(cur+1)+' / '+marks.length}
+  sIn.addEventListener('input',function(){clearTimeout(sT);sT=setTimeout(doSearch,250)});
+  sIn.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();if(marks.length)go(cur+(e.shiftKey?-1:1));else doSearch()}if(e.key==='Escape'){sIn.value='';clearMarks()}});
+  $('qNext').onclick=function(){marks.length?go(cur+1):doSearch()};
+  $('qPrev').onclick=function(){marks.length?go(cur-1):doSearch()};
+  $('qClear').onclick=function(){sIn.value='';clearMarks();sIn.focus()};
+
+  // active nav
+  var links=[].slice.call(document.querySelectorAll('nav.toc a'));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'))});
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){var i=secs.indexOf(en.target);links.forEach(function(l){l.classList.remove('on')});if(links[i]){links[i].classList.add('on');var nv=links[i].parentElement;nv.scrollLeft=links[i].offsetLeft-nv.clientWidth/2+links[i].offsetWidth/2}}})},{rootMargin:'-40% 0px -55% 0px'});
+    secs.forEach(function(s){if(s)io.observe(s)});
+  }
+})();
+
+</script>
+<script src="https://mattsue1003.github.io/oth-report-button/report.js" data-site="桃園療養院職能治療科 AI 教案製作" defer></script>
+</body>
+</html>
